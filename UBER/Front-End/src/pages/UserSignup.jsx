@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
-import { userDataContext } from "../context/userContext";
+import { UserDataContext } from "../context/userContext";
 
 const Userlogin = () => {
   const [email, setEmail] = useState('');
@@ -12,7 +12,7 @@ const Userlogin = () => {
   const [Lastname, setLastname] = useState('')
   const [confirmPassword, setconfirmPassword] = useState('');
 
-  const {user , setuser} = useContext(userDataContext);
+  const {user , setuser} = useContext(UserDataContext);
     const navigate = useNavigate();
 
   const submitHandler =async (e)=>{
@@ -24,14 +24,14 @@ const Userlogin = () => {
       },
       email: email,
       password: password,
-      confirmPassword:confirmPassword
     };
    const newuser =await axios.post("http://localhost:4000/createuser/register",userdata);
    if(newuser.status===201){
     const data=newuser.data;
     setuser(data.user);
-    navigate("/");
+    navigate("/user-Login");
    }
+   console.log(user );
     setEmail('');
     setPassword('');
     setconfirmPassword('');
@@ -47,7 +47,7 @@ const Userlogin = () => {
                 <Link to='/user-Login' className="text-lg "><strong>Back</strong></Link>
               </div>
        <div className="w-full flex justify-center text-xl font-semibold">
-        <h1>Sign UP</h1>
+        <h1>Sign UP user</h1>
        </div>
         
         <h1 className="text-base mb-2 font-sans">Enter You'r Name </h1>
@@ -85,7 +85,7 @@ const Userlogin = () => {
           placeholder="Email"
         />
         
-        <h1 className="font-sans text-base mb-2">Enter You'r Password</h1>
+        <h1 className="font-sans text-base mb-2">Create You'r Password</h1>
         <input
         value={password}
         onChange={(e)=>{

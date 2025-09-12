@@ -1,14 +1,13 @@
 const blacklist = require("../Models/blacklist");
 const UserModel = require("../Models/User-Model");
 const userservices = require("../services/user.services");
-const { validationResult } = require("express-validator");
 
 module.exports.registeruser = async function Createuser(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
   const { fullname, email, password } = req.body;
+  const useralreadyexists = await UserModel.findOne({ email });
+  if (useralreadyexists) {
+    return res.status(400).json({ message: "user already exists" });
+  };
   const hashedPassword = await UserModel.hashPassword(password);
   const user = await userservices.createuser({
     Firstname: fullname.Firstname,
@@ -16,21 +15,18 @@ module.exports.registeruser = async function Createuser(req, res) {
     email: email,
     password: hashedPassword,
   });
-  const token = UserModel.generateAuthToken();
+  const token = user.generateAuthToken();
   res.cookie("token", token);
   res.status(201).json({ message: "user created successfully", user, token });
 };
 
 module.exports.loginuser = async function loginuser(req, res) {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
   const { email, password } = req.body;
   const user = await UserModel.findOne({ email }).select("+password");
   if (!user) {
     return res.status(401).json({ message: "invalid email or password" });
   }
+  
   const isMatch = await user.comparePassword(password);
   if (!isMatch) {
     return res.status(401).json({ message: "invalid email or password" });
@@ -44,10 +40,28 @@ module.exports.getuserprofile = async function getuserprofile(req, res) {
   res.status(200).json(req.user);
 };
 
-module.exports.logoutuser = async (req, res)=>{
-  res.clearCookie("token");
-  const token=req.cookies.token || req.header.authorization.split(" ")[1];
+module.exports.logoutuser = async (req, res) => {
+  try {
+    let token = req.cookies.token || (req.headers.authorization && req.headers.authorization.split(" ")[1]);
 
-  await blacklist.create({token});
-  res.status(200).json({message:"logout successful"});
-} 
+    if (!token) {
+      return res.status(400).json({ message: "No token provided" });
+    }
+
+    // Save token to blacklist only if not already there
+    await blacklist.findOneAndUpdate(
+      { token },
+      { token },
+      { upsert: true, new: true }
+    );
+
+    // Clear cookie if using cookies
+    res.clearCookie("token");
+
+    res.status(200).json({ message: "Logout successful" });
+  } catch (error) {
+    console.error("Logout error:", error);
+    res.status(500).json({ message: "Something went wrong during logout" });
+  }
+};
+
