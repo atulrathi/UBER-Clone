@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 const Captainproctedwraper = ({children}) => {
  const navigate=useNavigate();
-const tokne= localStorage.getItem("captainToken");
+const tokne= localStorage.getItem("caption");
   useEffect(() => {
         if (!tokne) {
           navigate("/caption-Login");

@@ -47,7 +47,7 @@ const Userlogin = () => {
                 <Link to='/user-Login' className="text-lg "><strong>Back</strong></Link>
               </div>
        <div className="w-full flex justify-center text-xl font-semibold">
-        <h1>Sign UP user</h1>
+        <h1>Sign UP </h1>
        </div>
         
         <h1 className="text-base mb-2 font-sans">Enter You'r Name </h1>

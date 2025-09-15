@@ -26,7 +26,7 @@ const Userlogin = () => {
       if(newuser.status==200){
         const data = newuser.data;
         setcaptain(data.captain);
-        localStorage.setItem("captainToken", data.token);
+        localStorage.setItem("caption", data.token);
         alert("Login Successful");
         Nevigate("/caption-home");
       };
@@ -35,7 +35,7 @@ const Userlogin = () => {
   };
 
   return (
-    <div>
+    <div >
       <form
         onSubmit={(e) => {
           submitHandler(e);
@@ -80,9 +80,12 @@ const Userlogin = () => {
           placeholder="Password"
           required
         />
-        <button className="font-sans bg-[#111] text-white ml-8 rounded-lg text-xl w-[15rem] font-semibold mb-2 rounded py-2 px-1">
+        <div className="flex justify-center items-center">
+          <button className="font-sans bg-[#111] text-white  rounded-lg text-xl w-[50%] font-semibold mb-2  py-2 px-1">
           Login
         </button>
+        </div>
+        
       </form>
       <div className="flex items-center divide-x divide-gray-300">
         <span className="flex-grow border-t  border-geay-300"></span>

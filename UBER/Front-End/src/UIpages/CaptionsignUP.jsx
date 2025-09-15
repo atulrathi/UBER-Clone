@@ -32,7 +32,7 @@ const [email, setEmail] = useState('');
 
     if(newuser.status == 201){
       const data = newuser.data;
-      localStorage.setItem('token',data.token);
+      localStorage.setItem('caption',data.token);
       console.log(data);
        Nevigate('/vehicle-info');
     }
@@ -108,10 +108,12 @@ const [email, setEmail] = useState('');
         <div className="flex gap-1 mb-6">
           <h1 className="text-xs">By procceding you consent to get Email's, WhatsApp or SMS message, including by automated means,from UBER and it's affilates to the Email provided</h1>
         </div>
-        
-        <button  className="font-sans bg-[#111] text-white ml-8 rounded-lg text-xl w-[15rem] font-semibold mb-2 rounded py-2 px-1">
+        <div className="w-full flex justify-center">
+          <button  className="font-sans bg-[#111] text-white rounded-lg text-xl w-[50%] font-semibold mb-2 rounded py-2 px-1">
           Next
         </button>
+        </div>
+        
       </form>
       <div className="w-full flex justify-center absolute bottom-3">
         <h1 className="text-xs"><strong className="underline">Privacy & Policy</strong> and <strong className="underline">Term of service</strong> apply</h1>

@@ -3,7 +3,7 @@ import React from 'react'
 const CaptainHome = () => {
   return (
     <div>
-      <h1>vaption home</h1>
+      <h1>caption home</h1>
     </div>
   )
 }

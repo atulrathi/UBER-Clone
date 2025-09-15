@@ -78,8 +78,27 @@ module.exports.getcaptionprofile=async(req,res)=>{
 }
 
 module.exports.logoutcaption=async (req, res)=>{
-  const token=req.cookies.token || req.header.authorization.split(" ")[1];
-  await blacklist.create({token});
-  res.clearCookie("token");
-  res.status(200).json({message:"logout successful"});
+  try {
+      let token = req.cookies.token || (req.headers.authorization && req.headers.authorization.split(" ")[1]);
+  
+      if (!token) {
+        console.log("there is no token")
+        return res.status(400).json({ message: "No token provided" });
+      }
+  
+      // Save token to blacklist only if not already there
+      await blacklist.findOneAndUpdate(
+        { token },
+        { token },
+        { upsert: true, new: true }
+      );
+  
+      // Clear cookie if using cookies
+      res.clearCookie("token");
+  
+      res.status(200).json({ message: "Logout successful" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      res.status(500).json({ message: "Something went wrong during logout" });
+    }
 } ;

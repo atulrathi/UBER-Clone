@@ -9,6 +9,7 @@ const UserContext = ({ children }) => {
       Lastname: ""
     },
     email: "",
+    payment:'cash'
   });
 
   return (
