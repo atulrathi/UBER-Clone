@@ -12,7 +12,8 @@ import Vehicleinfo from './UIpages/vehicledetail'
 import CaptainHome from './UIpages/CaptainHome'
 import Captainproctedwraper from './UIpages/Captainproctedwraper'
 import CaptanLogout from './UIpages/CaptainLogout'
-
+import Ridestart from './UIpages/Ridestart'
+import Share from './Components/Sharetrip'
 
 const App = () => {
   return (
@@ -36,6 +37,7 @@ const App = () => {
           </Captainproctedwraper>
         }/>
         <Route path='/caption-home/logout' element={<CaptanLogout />} />
+        <Route path='/caption-ride' element={<Ridestart />} />
       </Routes>
     </div>
   )

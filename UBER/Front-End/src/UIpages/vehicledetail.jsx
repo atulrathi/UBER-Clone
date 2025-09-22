@@ -25,7 +25,7 @@ const Userlogin = () => {
       Vehiclemodel: Vehiclemodel,
       Vehiclecapacity: Vehiclecapacity,
       Vehicletype: Vehicletype,
-      token: localStorage.getItem("token"),
+      token: localStorage.getItem("caption"),
     };
 
     const newuser = await axios.post(

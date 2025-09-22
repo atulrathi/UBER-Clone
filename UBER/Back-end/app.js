@@ -7,6 +7,7 @@ const connectDB = require("./Data-Base/MongoDB");
 const userRoutes = require("./Router/user.routes");
 const captionRoutes = require("./Router/caption.routes");
 const cookieParser=require("cookie-parser");
+const JWT = require('jsonwebtoken');
 
 app.use(cookieParser());
 app.use(
