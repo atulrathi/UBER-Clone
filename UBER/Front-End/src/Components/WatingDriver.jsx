@@ -1,7 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import gsap from "gsap";
+import { UserDataContext } from "../context/userContext";
 
 const WaitingDriver = (props) => {
+
+  const {user} = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+
   useEffect(() => {
     const tl = gsap.timeline({ repeat: -1 });
     tl.to(".dot", {
@@ -29,7 +34,7 @@ const WaitingDriver = (props) => {
 
       {/* Car Image */}
       <div className="w-full flex flex-col justify-center items-center mt-4">
-        <img className="h-[7rem]" src="./public/ubercar.png" alt="car" />
+        <img className="h-[7rem]" src={vehicle.image} alt="car" />
 
         {/* Professional Three Dot Loader */}
         <div className="flex gap-2 mt-6">
