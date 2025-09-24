@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-module.exports.getCoordinates=async function (address) {
+module.exports.getCoordinates = async function (address) {
   const url = `https://api.geoapify.com/v1/geocode/search?text=${encodeURIComponent(address)}&apiKey=c43caf01b1bc4a379e04bc1b030683b2`;
   const response = await axios.get(url);
   const features = response.data.features;
@@ -10,4 +10,34 @@ module.exports.getCoordinates=async function (address) {
     lat: features[0].properties.lat,
     lon: features[0].properties.lon,
   };
-}
+};
+
+module.exports.calculateFare=async (distanceKm, durationMin, vehicle) => {
+  let baseFare, perKmRate, perMinRate;
+
+  switch (vehicle) {
+    case "bike":
+      baseFare = 20;
+      perKmRate = 5;
+      perMinRate = 1;
+      break;
+
+    case "auto":
+      baseFare = 30;
+      perKmRate = 8;
+      perMinRate = 1.5;
+      break;
+
+    case "car":
+    default:
+      baseFare = 50;
+      perKmRate = 10;
+      perMinRate = 2;
+      break;
+  }
+
+  distanceKm = Number(distanceKm);
+  durationMin = Number(durationMin);
+
+  return baseFare + distanceKm * perKmRate + durationMin * perMinRate;
+};

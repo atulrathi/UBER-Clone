@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useContext } from "react";
 import { useGSAP } from "@GSAP/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -9,8 +9,9 @@ import WatingDriver from "../Components/WatingDriver";
 import Sharetrip from '../Components/Sharetrip'
 import PaymentPanel from "../Components/Payment";
 import GeoMap from "../Components/MapComponent";
-import axios from 'axios'
+import axios from 'axios';
 import Loader from "../Components/Lodercomponent";
+import { UserDataContext } from '../context/userContext'
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -31,24 +32,33 @@ const Home = () => {
   const Paymentref = useRef(null);
   const driverref = useRef(null);
 
-const submithndler = async (e) => {
-  e.preventDefault();
-  setisup(false);
-  setVehiclepannel(true);
-  setLoading(true); 
- 
+  const { user, setuser } = useContext(UserDataContext)
+
+  const submithndler = async (e) => {
+    e.preventDefault();
+    setisup(false);
+    setVehiclepannel(true);
+    setLoading(true);
+
     try {
       const totaldis = await axios.post(
         "http://localhost:4000/distance/time-distance",
         { pickup, destination }
       );
-      console.log(totaldis.data)
+      console.log(totaldis.data);
+      setuser({
+        ...user, duration: totaldis.data.
+          duration_min
+        , distance: totaldis.data.distance_km,
+        fare:totaldis.data.fare
+      })
+      console.log(user)
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-};
+  };
 
   // 📌 Location Search Panel
   useGSAP(() => {
@@ -179,7 +189,7 @@ const submithndler = async (e) => {
 
   return (
     <div className="relative h-screen overflow-hidden">
-      {loading && <Loader />} 
+      {loading && <Loader />}
       {/* Uber Logo */}
       <img
         className="z-20 fixed w-[5rem] h-6 ml-[2rem] mt-[3rem]"
@@ -236,7 +246,7 @@ const submithndler = async (e) => {
             <div className="flex w-full justify-end">
               <button
                 disabled={!(pickup?.length >= 3 && destination?.length >= 3)}
-                onClick={() => {submithndler}}
+                onClick={() => { submithndler }}
                 className={`px-3 py-1 ml-[70%] mt-2 rounded-xl transition 
       ${(pickup?.length >= 3 && destination?.length >= 3)
                     ? "bg-green-400 cursor-pointer"

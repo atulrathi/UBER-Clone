@@ -1,6 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
+import { UserDataContext } from "../context/userContext";
 
 const Vehicledetail = (props) => {
+  const { user } = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+
   return (
     <div>
       <div className="h-full flex flex-col justify-center rounded-tr-3xl items-center p-6 bg-white shadow-lg">
@@ -17,16 +21,10 @@ const Vehicledetail = (props) => {
         </h4>
 
         {/* Title */}
-        <h1 className="text-3xl font-semibold text-gray-800">
-          Confirm your Ride
-        </h1>
+        <h1 className="text-3xl font-semibold text-gray-800">Confirm your Ride</h1>
 
-        {/* Car Image */}
-        <img
-          className="h-40 p-4 object-contain"
-          src="./public/ubercar.png"
-          alt="Uber Car"
-        />
+        {/* Vehicle Image */}
+        <img className="h-40 p-4 object-contain" src={vehicle.image} alt={vehicle.name} />
 
         {/* Ride Details */}
         <div className="">
@@ -35,9 +33,7 @@ const Vehicledetail = (props) => {
             <i className="ri-map-pin-3-fill text-xl text-green-500"></i>
             <div>
               <h1 className="font-semibold text-lg text-gray-900">562/11</h1>
-              <p className="text-gray-600 text-sm">
-                kankarriya talab, Chatiya Aulia
-              </p>
+              <p className="text-gray-600 text-sm">kankarriya talab, Chatiya Aulia</p>
             </div>
           </div>
 
@@ -55,19 +51,14 @@ const Vehicledetail = (props) => {
             <div className="flex items-center gap-2">
               <i className="ri-road-map-line text-xl text-indigo-500"></i>
               <div>
-                <h1 className="font-semibold text-lg text-gray-900">
-                  {props.distance || "12.4 km"}
-                </h1>
+                <h1 className="font-semibold text-lg text-gray-900">{user.distance} km</h1>
                 <p className="text-gray-600 text-sm">Distance</p>
               </div>
             </div>
-
             <div className="flex items-center gap-2">
               <i className="ri-time-line text-xl text-purple-500"></i>
               <div>
-                <h1 className="font-semibold text-lg text-gray-900">
-                  {props.duration || "28 mins"}
-                </h1>
+                <h1 className="font-semibold text-lg text-gray-900">{user.duration} min</h1>
                 <p className="text-gray-600 text-sm">Duration</p>
               </div>
             </div>
@@ -77,10 +68,8 @@ const Vehicledetail = (props) => {
           <div className="flex w-full mb-6 gap-4 items-center p-3 bg-gray-50 rounded-xl">
             <i className="ri-bank-card-line text-xl text-blue-600"></i>
             <div>
-              <h1 className="font-semibold text-lg text-gray-900">
-                ₹{props.fare || "193.20"}
-              </h1>
-              <p className="text-gray-600 text-sm">Cash</p>
+              <h1 className="font-semibold text-lg text-gray-900">&#8377;{vehicle.fare}</h1>
+              <p className="text-gray-600 text-sm">{user.payment}</p>
             </div>
           </div>
         </div>
@@ -94,9 +83,7 @@ const Vehicledetail = (props) => {
             }}
             className="py-4 px-12 bg-green-500 hover:bg-green-600 transition rounded-2xl shadow-md"
           >
-            <h1 className="text-white font-semibold text-xl">
-              Confirm Ride
-            </h1>
+            <h1 className="text-white font-semibold text-xl">Confirm Ride</h1>
           </button>
         </div>
       </div>

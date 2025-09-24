@@ -1,3 +1,4 @@
+import { distance } from "framer-motion";
 import { useState, createContext } from "react";
 
 export const UserDataContext = createContext();
@@ -9,7 +10,11 @@ const UserContext = ({ children }) => {
       Lastname: ""
     },
     email: "",
-    payment:'cash'
+    payment:'UPI',
+    distance:'',
+      duration:'',
+      fare:'',
+    selectedVehicle:''
   });
 
   return (

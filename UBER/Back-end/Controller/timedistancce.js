@@ -1,16 +1,16 @@
 const fetch = require("node-fetch");
-const axios=require('axios')
-const {getCoordinates} = require('../services/geocoding')
+const axios = require('axios')
+const { getCoordinates, calculateFare } = require('../services/geocoding')
 
 module.exports.getDrivingDistance = async (req, res) => {
   try {
     const { pickup, destination } = req.body;
 
-    const pickupCoords = await getCoordinates(pickup);         // e.g., "Delhi"
-    const destinationCoords = await getCoordinates(destination); // e.g., "Sonipat"
+    const pickupCoords = await getCoordinates(pickup);
+    const destinationCoords = await getCoordinates(destination);
 
     if (!pickupCoords || !destinationCoords) {
-        console.log('no pck up and destination')
+      console.log('no pck up and destination')
       return res.status(400).json({ error: "Pickup and destination are required" });
     }
 
@@ -20,18 +20,30 @@ module.exports.getDrivingDistance = async (req, res) => {
     const data = await response.data;
 
     if (!data.features || data.features.length === 0) {
-        console.log('router is not found')
+      console.log('router is not found')
       return res.status(404).json({ error: "Route not found" });
     }
 
-    const distance = data.features[0].properties.distance; // meters
-    const duration = data.features[0].properties.time; // seconds
+    const distance = data.features[0].properties.distance;
+    const duration = data.features[0].properties.time;
+
+    const distanceKm = distance / 1000;
+    const durationMin = duration / 60;
+
+    const carFare =await calculateFare(distanceKm, durationMin, "car");
+    const bikeFare =await calculateFare(distanceKm, durationMin, "bike");
+    const autoFare =await calculateFare(distanceKm, durationMin, "auto");
 
     // Send JSON response
-    console.log(distance/1000,duration/60)
+    console.log(distance / 1000, duration / 60)
     res.json({
-      distance_km: (distance / 1000).toFixed(2),
-      duration_min: (duration / 60).toFixed(2),
+      distance_km: distanceKm.toFixed(2),
+      duration_min: durationMin.toFixed(2),
+      fare: {
+        car: carFare.toFixed(2),
+        bike: bikeFare.toFixed(2),
+        auto: autoFare.toFixed(2)
+      }
     });
   } catch (err) {
     console.error(err);
