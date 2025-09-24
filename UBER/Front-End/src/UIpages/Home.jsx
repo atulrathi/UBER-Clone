@@ -8,6 +8,9 @@ import ConfermRide from "../Components/ConfermRide";
 import WatingDriver from "../Components/WatingDriver";
 import Sharetrip from '../Components/Sharetrip'
 import PaymentPanel from "../Components/Payment";
+import GeoMap from "../Components/MapComponent";
+import axios from 'axios'
+import Loader from "../Components/Lodercomponent";
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -17,7 +20,8 @@ const Home = () => {
   const [confermride, setconfermride] = useState(false);
   const [Wating, setWating] = useState(false);
   const [Payment, setPayment] = useState(false);
-  const [Driver, setDriver] = useState(false)
+  const [Driver, setDriver] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const panelref = useRef(null);
   const downerrow = useRef(null);
@@ -27,9 +31,24 @@ const Home = () => {
   const Paymentref = useRef(null);
   const driverref = useRef(null);
 
-  const submithndler = (e) => {
-    e.preventDefault();
-  };
+const submithndler = async (e) => {
+  e.preventDefault();
+  setisup(false);
+  setVehiclepannel(true);
+  setLoading(true); 
+ 
+    try {
+      const totaldis = await axios.post(
+        "http://localhost:4000/distance/time-distance",
+        { pickup, destination }
+      );
+      console.log(totaldis.data)
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+};
 
   // 📌 Location Search Panel
   useGSAP(() => {
@@ -39,6 +58,7 @@ const Home = () => {
           height: "70%",
           duration: 0.6,
           ease: "power2.out",
+          overflow: 'scroll'
         });
         gsap.to(downerrow.current, { opacity: 1, duration: 0.3 });
         gsap.to(panelref.current.children, {
@@ -119,7 +139,7 @@ const Home = () => {
     return () => ctx.revert();
   }, [Wating]);
 
-    useGSAP(() => {
+  useGSAP(() => {
     const ctx = gsap.context(() => {
       if (Payment) {
         gsap.to(Paymentref.current, {
@@ -136,9 +156,9 @@ const Home = () => {
       }
     });
     return () => ctx.revert();
-  }, [Payment,Paymentref]);
+  }, [Payment, Paymentref]);
 
-    useGSAP(() => {
+  useGSAP(() => {
     const ctx = gsap.context(() => {
       if (Driver) {
         gsap.to(driverref.current, {
@@ -155,10 +175,11 @@ const Home = () => {
       }
     });
     return () => ctx.revert();
-  }, [Driver,driverref]);
+  }, [Driver, driverref]);
 
   return (
     <div className="relative h-screen overflow-hidden">
+      {loading && <Loader />} 
       {/* Uber Logo */}
       <img
         className="z-20 fixed w-[5rem] h-6 ml-[2rem] mt-[3rem]"
@@ -167,23 +188,16 @@ const Home = () => {
       />
 
       {/* Background Map/Gif */}
-      <div className="h-screen w-screen">
-        <img
-          onClick={() => {
-            setisup(false);
-            setVehiclepannel(false);
-          }}
-          className="h-full w-full z-10 object-cover"
-          src="./public/uber.gif"
-          alt=""
-        />
+      <div className="absolute inset-0 z-10">
+        <GeoMap pickup={pickup} destination={destination} />
       </div>
+
+
 
       {/* 🔥 Overlay Backdrop */}
       <div
-        className={`fixed inset-0 bg-black/50 z-10 transition-opacity duration-300 ${
-          Vehiclepannel || confermride || Wating ? "opacity-100" : "opacity-0 pointer-events-none"
-        }`}
+        className={`fixed inset-0 bg-black/50 z-10 transition-opacity duration-300 ${Vehiclepannel || confermride || Wating ? "opacity-100" : "opacity-0 pointer-events-none"
+          }`}
       />
 
       {/* Main UI Panels */}
@@ -219,13 +233,27 @@ const Home = () => {
               type="text"
               placeholder="Enter your Destination "
             />
+            <div className="flex w-full justify-end">
+              <button
+                disabled={!(pickup?.length >= 3 && destination?.length >= 3)}
+                onClick={() => {submithndler}}
+                className={`px-3 py-1 ml-[70%] mt-2 rounded-xl transition 
+      ${(pickup?.length >= 3 && destination?.length >= 3)
+                    ? "bg-green-400 cursor-pointer"
+                    : "bg-gray-300 cursor-not-allowed"}`}
+              >
+                Find Ride
+              </button>
+            </div>
+
+
           </form>
         </div>
 
         {/* Panels */}
         <div ref={panelref} className="h-0 bg-white mt-[-1px] overflow-hidden">
           <div className="opacity-0">
-            <LocationSearchpannel setisup={setisup} setVehiclepannel={setVehiclepannel} />
+            <LocationSearchpannel destination={destination} setdestination={setdestination} setpickup={setpickup} pickup={pickup} setisup={setisup} setVehiclepannel={setVehiclepannel} />
           </div>
         </div>
 
@@ -250,15 +278,15 @@ const Home = () => {
 
         <div
           ref={waitingref}
-          className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-full"
+          className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]"
         >
-          <WatingDriver setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating}/>
+          <WatingDriver setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />
         </div>
-        <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white"> 
-          <Sharetrip setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment}/>
+        <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
+          <Sharetrip setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment} />
         </div>
-        <div ref={Paymentref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-full">
-          <PaymentPanel setDriver={setDriver} setPayment={setPayment}/>
+        <div ref={Paymentref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
+          <PaymentPanel setDriver={setDriver} setPayment={setPayment} />
         </div>
       </div>
     </div>

@@ -8,6 +8,7 @@ const userRoutes = require("./Router/user.routes");
 const captionRoutes = require("./Router/caption.routes");
 const cookieParser=require("cookie-parser");
 const JWT = require('jsonwebtoken');
+const finddistance = require('./Router/finddistance');
 
 app.use(cookieParser());
 app.use(
@@ -23,5 +24,6 @@ app.use(express.urlencoded({extended:true}));
 
 app.use("/createuser",userRoutes);
 app.use("/caption",captionRoutes);
+app.use('/distance',finddistance);
 
 module.exports=app;
