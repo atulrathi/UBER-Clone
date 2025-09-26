@@ -11,7 +11,9 @@ import PaymentPanel from "../Components/Payment";
 import GeoMap from "../Components/MapComponent";
 import axios from 'axios';
 import Loader from "../Components/Lodercomponent";
-import { UserDataContext } from '../context/userContext'
+import { UserDataContext } from '../context/userContext';
+import { SocketContext } from '../context/SocketContext'
+import { useEffect } from "react";
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -32,7 +34,13 @@ const Home = () => {
   const Paymentref = useRef(null);
   const driverref = useRef(null);
 
-  const { user, setuser } = useContext(UserDataContext)
+  const { user, setuser } = useContext(UserDataContext);
+  const { sendMessage, onMessage } = useContext(SocketContext);
+
+  useEffect(() => {
+    sendMessage("join", { usertype: 'user', userID: user._id })
+  }, [user])
+
 
   const submithndler = async (e) => {
     e.preventDefault();
@@ -50,7 +58,7 @@ const Home = () => {
         ...user, duration: totaldis.data.
           duration_min
         , distance: totaldis.data.distance_km,
-        fare:totaldis.data.fare
+        fare: totaldis.data.fare
       })
       console.log(user)
     } catch (err) {
@@ -279,6 +287,8 @@ const Home = () => {
           className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-full"
         >
           <ConfermRide
+            pickup={pickup}
+            destination={destination}
             setWating={setWating}
             setconfermride={setconfermride}
             setisup={setisup}
@@ -290,7 +300,7 @@ const Home = () => {
           ref={waitingref}
           className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]"
         >
-          <WatingDriver setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />
+          <WatingDriver destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />
         </div>
         <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
           <Sharetrip setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment} />

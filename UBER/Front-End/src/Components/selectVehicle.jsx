@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { UserDataContext } from "../context/userContext";
 
 const SelectVehicle = (props) => {
+  
   const { user, setuser } = useContext(UserDataContext);
 
   const handleSelect = (vehicle) => {

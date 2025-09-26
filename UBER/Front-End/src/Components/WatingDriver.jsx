@@ -50,10 +50,7 @@ const WaitingDriver = (props) => {
         <div className="flex items-start gap-3 border-b border-gray-200 pb-3 mb-3">
           <i className="ri-map-pin-3-fill text-2xl text-green-600"></i>
           <div>
-            <h2 className="font-semibold text-lg">562/11</h2>
-            <p className="text-gray-600 text-sm">
-              Kankarriya Talab, Chatiya Aulia
-            </p>
+            <h2 className="font-semibold text-lg">{props.pickup}</h2>
           </div>
         </div>
 
@@ -61,8 +58,7 @@ const WaitingDriver = (props) => {
         <div className="flex items-start gap-3">
           <i className="ri-map-pin-line text-2xl text-red-500"></i>
           <div>
-            <h2 className="font-semibold text-lg">Sonipat</h2>
-            <p className="text-gray-600 text-sm">Near Indra</p>
+            <h2 className="font-semibold text-lg">{props.destination}</h2>
           </div>
         </div>
       </div>

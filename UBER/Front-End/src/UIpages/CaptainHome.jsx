@@ -1,15 +1,19 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import Newride from '../Components/Newride'
 import OTPVerification from '../Components/Otpverification'
 import { useGSAP } from "@GSAP/react";
 import gsap from "gsap";
 import Rideconfirm from '../Components/Rideconfirm'
 import Captiondetails from '../Components/Captiondetails'
+import { UserDataContext } from '../context/userContext';
 
 const CaptainHome = () => {
 
+  const {user} = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+
   const [OTP, setOTP] = useState(false)
-  const [newride, setnewride] = useState(false)
+  const [newride, setnewride] = useState(true)
   const [Ridestart, setRidestart] = useState(false)
   const Ridestartref = useRef(null)
   const Otpref = useRef(null)
@@ -76,7 +80,7 @@ const CaptainHome = () => {
     <div className='h-screen w-screen overflow-hidden'>
       <div className='h-full w-full'>
         <div  className="fixed h-9 w-10 flex justify-center items-center rounded-full bg-white top-9 right-7">
-          <i class="ri-user-settings-fill"></i>
+          <i className="ri-user-settings-fill"></i>
         </div>
       <img
         className="z-20 fixed w-[5rem] h-6 ml-[2rem] mt-[3rem]"

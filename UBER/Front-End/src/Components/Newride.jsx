@@ -1,6 +1,10 @@
-import React, { useRef, useState } from "react";
-
+import React, { useContext, useRef, useState } from "react";
+import { UserDataContext } from "../context/userContext";
 const Riderequest = (props) => {
+
+  const {user} = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+
 
   return (
     <div className="w-full bg-white rounded-t-2xl shadow-lg p-5 flex items-start gap-4">
@@ -31,7 +35,7 @@ const Riderequest = (props) => {
           <span className="font-medium">Destination:</span> shahdara
         </p>
         <p className="text-sm text-gray-700 mb-3">
-          <span className="font-medium">Estimated Fare:</span> ₹129.89
+          <span className="font-medium">Estimated Fare:</span> ₹{vehicle.fare}
         </p>
 
         {/* Buttons */}

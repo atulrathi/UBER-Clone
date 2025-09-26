@@ -1,10 +1,9 @@
-// Components/Loader.jsx
 import React from "react";
 import "remixicon/fonts/remixicon.css";
 
 const Loader = () => {
   return (
-    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white z-[9999]">
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-white/30 backdrop-blur-lg z-[9999]">
       {/* Animated car */}
       <div className="relative">
         <i className="ri-car-line text-6xl text-green-500 animate-bounce" />

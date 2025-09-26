@@ -32,8 +32,7 @@ const Vehicledetail = (props) => {
           <div className="flex w-full mb-3 gap-4 items-center p-3 bg-gray-50 rounded-xl">
             <i className="ri-map-pin-3-fill text-xl text-green-500"></i>
             <div>
-              <h1 className="font-semibold text-lg text-gray-900">562/11</h1>
-              <p className="text-gray-600 text-sm">kankarriya talab, Chatiya Aulia</p>
+              <h1 className="font-semibold text-lg text-gray-900">{props.pickup}</h1>
             </div>
           </div>
 
@@ -41,8 +40,7 @@ const Vehicledetail = (props) => {
           <div className="flex w-full mb-3 gap-4 items-center p-3 bg-gray-50 rounded-xl">
             <i className="ri-map-pin-line text-xl text-red-500"></i>
             <div>
-              <h1 className="font-semibold text-lg text-gray-900">Sonipat</h1>
-              <p className="text-gray-600 text-sm">near indra</p>
+              <h1 className="font-semibold text-lg text-gray-900">{props.destination}</h1>
             </div>
           </div>
 

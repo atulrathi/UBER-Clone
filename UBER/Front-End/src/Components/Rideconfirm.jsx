@@ -54,16 +54,7 @@ const Newride = (props) => {
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Payment Method
         </label>
-        <select
-          value={paymentMode}
-          onChange={(e) => setPaymentMode(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-        >
-          <option value="UPI">UPI</option>
-          <option value="Cash">Cash</option>
-          <option value="Card">Card</option>
-          <option value="Wallet">Wallet</option>
-        </select>
+        <h1 className="text-sm text-gray-600 font-semibold">Cash</h1>
       </div>
 
       {/* Action Buttons */}
