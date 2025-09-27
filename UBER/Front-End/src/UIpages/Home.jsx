@@ -12,7 +12,7 @@ import GeoMap from "../Components/MapComponent";
 import axios from 'axios';
 import Loader from "../Components/Lodercomponent";
 import { UserDataContext } from '../context/userContext';
-import { SocketContext } from '../context/SocketContext'
+import { SocketContext } from '../context/SocketContext';
 import { useEffect } from "react";
 
 const Home = () => {
@@ -35,12 +35,33 @@ const Home = () => {
   const driverref = useRef(null);
 
   const { user, setuser } = useContext(UserDataContext);
-  const { sendMessage, onMessage } = useContext(SocketContext);
+  let userid=user.id;
+  const { socket } = useContext(SocketContext);
 
   useEffect(() => {
-    sendMessage("join", { usertype: 'user', userID: user._id })
-  }, [user])
+    const token = localStorage.getItem("token");
 
+    async function fetchUser() {
+      try {
+        const res = await axios.get("http://localhost:4000/setuser/userdata", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 200) {
+          let data = res.data;
+          setuser({...user, id: data._id});
+        }
+      } catch (err) {
+        console.error("❌ Error fetching user:", err);
+      }
+    }
+
+    if (token) fetchUser();
+
+    socket.emit('join', { usertype: 'user', userID:userid })
+
+
+  }, [userid]);
 
   const submithndler = async (e) => {
     e.preventDefault();

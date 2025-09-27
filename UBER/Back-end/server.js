@@ -1,13 +1,24 @@
-const http=require("http");
-const app=require("./app");
-const {initializeSocket} = require('./socket')
-const port=process.env.PORT || 3000 ;
+require("dotenv").config();
+const http = require("http");
+const app = require("./app");
+const { initializeSocket } = require("./socket");
 
-const Server =http.createServer(app);
+const port = process.env.PORT || 3000;
 
-initializeSocket(Server);
+const server = http.createServer(app);
 
+// Initialize socket.io with server
+initializeSocket(server);
 
-Server.listen(port,()=>{
-  console.log(`server is running on ${port}`);
+server.listen(port, () => {
+  console.log(`🚀 Server is running on http://localhost:${port}`);
+});
+
+// Graceful shutdown
+process.on("SIGINT", () => {
+  console.log("Shutting down server...");
+  server.close(() => {
+    console.log("HTTP server closed.");
+    process.exit(0);
+  });
 });

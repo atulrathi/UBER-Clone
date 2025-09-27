@@ -7,7 +7,7 @@ let io;
 function initializeSocket(server) {
     io = socketIO(server, {
         cors: {
-            origin: '#',
+            origin: 'http://localhost:5173/',
             method: ['GET', 'POST']
         }
     });
@@ -15,20 +15,27 @@ function initializeSocket(server) {
     io.on('connection', (socket) => {
         console.log('clint connected :', socket.id);
 
-        socket.on('join', async (data) => {
-            const { userID, usertype } = data;
+socket.on('join', async (data) => {
+  try {
+    const { userID, usertype } = data;
 
+    if (!userID || userID.trim() === "") {
+      console.warn("⚠️ Invalid userID received for join:", userID);
+      return; // skip update
+    }
 
-            if (usertype == 'user') {
-                await usermodel.findByIdAndUpdate(userID, {
-                    socketID: socket.id
-                })
-            } else if (usertype == 'caption') {
-                await captionmodel.findByIdAndUpdate(userID, {
-                    socketID: socket.id
-                })
-            }
-        })
+    if (usertype === 'user') {
+      await usermodel.findByIdAndUpdate(userID, { socketID: socket.id });
+    } else if (usertype === 'caption') {
+      await captionmodel.findByIdAndUpdate(userID, { socketID: socket.id });
+    }
+
+    console.log(`${usertype} joined with socketID: ${socket.id}`);
+  } catch (err) {
+    console.error("Error in join event:", err);
+  }
+});
+
 
         socket.on('disconnect', () => {
             console.log(`clint is disconnect :`, socket.id);

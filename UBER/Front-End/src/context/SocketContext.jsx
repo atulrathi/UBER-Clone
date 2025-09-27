@@ -3,45 +3,30 @@ import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
 
-const SOCKET_SERVER_URL = "http://localhost:4000";
-
-const SocketProvider = ({ children }) => {
-  const socketRef = useRef();
-
-  useEffect(() => {
-    socketRef.current = io(SOCKET_SERVER_URL, {
+    const socket = io("http://localhost:4000", {
       transports: ["websocket"],
       reconnection: true,
     });
 
-    socketRef.current.on("connect", () => {
-      console.log("Socket connected:", socketRef.current.id);
+const SocketProvider = ({ children }) => {
+  
+
+  useEffect(() => {
+
+    socket.on("connect", () => {
+      console.log("Socket connected:", socket.id);
     });
-    socketRef.current.on("disconnect", () => {
+    socket.on("disconnect", () => {
       console.log("Socket disconnected");
     });
 
     return () => {
-      socketRef.current.disconnect();
+      socket.disconnect();
     };
   }, []);
 
-  // Send message to a specific event
-  const sendMessage = (eventName, data) => {
-    if (socketRef.current) {
-      socketRef.current.emit(eventName, data);
-    }
-  };
-
-  // Listen for messages from a specific event
-  const onMessage = (eventName, callback) => {
-    if (socketRef.current) {
-      socketRef.current.on(eventName, callback);
-    }
-  };
-
   return (
-    <SocketContext.Provider value={{ sendMessage, onMessage, socket: socketRef.current }}>
+    <SocketContext.Provider value={{ socket }}>
       {children}
     </SocketContext.Provider>
   );

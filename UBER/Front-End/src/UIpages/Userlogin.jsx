@@ -21,8 +21,7 @@ const Userlogin = () => {
     const response =await axios.post("http://localhost:4000/createuser/login",UserData);
     if(response.status===200){
       const data=response.data;
-      setuser(data.user);
-      console.log(user)
+      setuser(data.user._id);
       localStorage.setItem("token",data.token);
       navigate("/Home");
     }
