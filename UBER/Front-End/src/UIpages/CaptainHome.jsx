@@ -6,6 +6,7 @@ import gsap from "gsap";
 import Rideconfirm from '../Components/Rideconfirm'
 import Captiondetails from '../Components/Captiondetails'
 import { UserDataContext } from '../context/userContext';
+import Lowinternet from '../Components/lowinternet'
 
 const CaptainHome = () => {
 
@@ -78,6 +79,9 @@ const CaptainHome = () => {
 
   return (
     <div className='h-screen w-screen overflow-hidden'>
+
+      <Lowinternet />
+
       <div className='h-full w-full'>
         <div  className="fixed h-9 w-10 flex justify-center items-center rounded-full bg-white top-9 right-7">
           <i className="ri-user-settings-fill"></i>

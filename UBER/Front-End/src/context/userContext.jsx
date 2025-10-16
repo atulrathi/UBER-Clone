@@ -5,17 +5,21 @@ export const UserDataContext = createContext();
 
 const UserContext = ({ children }) => {
   const [user, setuser] = useState({
-    id:'',
+    id: '',
     fullname: {
       Firstname: "",
       Lastname: ""
     },
     email: "",
-    payment:'UPI',
-    distance:'',
-      duration:'',
-      fare:'',
-    selectedVehicle:''
+    payment: 'UPI',
+    distance: '',
+    duration: '',
+    fare: {
+      car: '',
+      bike: '',
+      auto: '',
+    },
+    selectedVehicle: ''
   });
 
   return (

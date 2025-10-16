@@ -11,6 +11,7 @@ import PaymentPanel from "../Components/Payment";
 import GeoMap from "../Components/MapComponent";
 import axios from 'axios';
 import Loader from "../Components/Lodercomponent";
+import Lowinternet from '../Components/lowinternet'
 import { UserDataContext } from '../context/userContext';
 import { SocketContext } from '../context/SocketContext';
 import { useEffect } from "react";
@@ -79,7 +80,11 @@ const Home = () => {
         ...user, duration: totaldis.data.
           duration_min
         , distance: totaldis.data.distance_km,
-        fare: totaldis.data.fare
+        fare:{
+          car:totaldis.data.fare.car,
+          bike:totaldis.data.fare.bike,
+          auto:totaldis.data.fare.auto
+        }
       })
       console.log(user)
     } catch (err) {
@@ -220,6 +225,9 @@ const Home = () => {
     <div className="relative h-screen overflow-hidden">
       {loading && <Loader />}
       {/* Uber Logo */}
+
+      <Lowinternet />
+
       <img
         className="z-20 fixed w-[5rem] h-6 ml-[2rem] mt-[3rem]"
         src="./public/uber-logo.png"
