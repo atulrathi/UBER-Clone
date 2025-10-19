@@ -20,7 +20,6 @@ socket.on('join', async (data) => {
     const { userID, usertype } = data;
 
     if (!userID || userID.trim() === "") {
-      console.warn("⚠️ Invalid userID received for join:", userID);
       return; // skip update
     }
 

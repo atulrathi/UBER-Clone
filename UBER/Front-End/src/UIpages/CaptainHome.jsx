@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useRef, useState, useEffect } from 'react'
 import Newride from '../Components/Newride'
 import OTPVerification from '../Components/Otpverification'
 import { useGSAP } from "@GSAP/react";
@@ -6,7 +6,10 @@ import gsap from "gsap";
 import Rideconfirm from '../Components/Rideconfirm'
 import Captiondetails from '../Components/Captiondetails'
 import { UserDataContext } from '../context/userContext';
-import Lowinternet from '../Components/lowinternet'
+import Lowinternet from '../Components/lowinternet';
+import axios from 'axios';
+import { SocketContext } from '../context/SocketContext';
+import {CaptainDatacontext} from '../context/CaptainContext';
 
 const CaptainHome = () => {
 
@@ -19,6 +22,31 @@ const CaptainHome = () => {
   const Ridestartref = useRef(null)
   const Otpref = useRef(null)
   const Newrideref = useRef(null)
+
+  const { socket } = useContext(SocketContext);
+  const {value,setvalue}=useContext(CaptainDatacontext)
+  let captionid=value.id
+  useEffect(() => {
+    const token = localStorage.getItem("caption");
+    async function fetchUser() {
+      try {
+        const res = await axios.get("http://localhost:4000/setcaption/captiondata", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (res.status === 200) {
+          let data = res.data;
+          setvalue({...value, id:data._id});
+        }       
+
+      } catch (err) {
+        console.error("❌ Error fetching user:", err);
+      }
+    }
+    if (token) fetchUser();
+    socket.emit('join', { usertype: 'caption', userID:captionid})
+
+  }, [captionid]);
 
     useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -95,10 +123,6 @@ const CaptainHome = () => {
       {/* Background Map/Gif */}
       <div className="h-screen w-screen">
         <img
-          onClick={() => {
-            setisup(false);
-            setVehiclepannel(false);
-          }}
           className="h-full w-full object-cover"
           src="./public/uber.gif"
           alt=""

@@ -1,13 +1,16 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { UserDataContext } from '../context/userContext';
 
 const Logout = () => {
   const navigate = useNavigate();
 
+ let {user,setuser}= useContext(UserDataContext)
+
   useEffect(() => {
     const token = localStorage.getItem("token");
-
+    user.active=false
     const logoutUser = async () => {
       try {
         const res = await axios.post(

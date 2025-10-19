@@ -9,7 +9,8 @@ const captionRoutes = require("./Router/caption.routes");
 const cookieParser=require("cookie-parser");
 const JWT = require('jsonwebtoken');
 const finddistance = require('./Router/finddistance');
-const setuser = require('./Router/setuser')
+const setuser = require('./Router/setuser');
+const setcaption = require('./Router/setcaption')
 
 app.use(cookieParser());
 app.use(
@@ -27,5 +28,6 @@ app.use("/createuser",userRoutes);
 app.use("/caption",captionRoutes);
 app.use('/distance',finddistance);
 app.use('/setuser',setuser);
+app.use('/setcaption',setcaption);
 
 module.exports=app;

@@ -57,8 +57,7 @@ const Home = () => {
       }
     }
 
-    if (token) fetchUser();
-
+    if (token) fetchUser();    
     socket.emit('join', { usertype: 'user', userID:userid })
 
 

@@ -25,7 +25,6 @@ const Userlogin = () => {
       });
       if(newuser.status==200){
         const data = newuser.data;
-        setcaptain(data.captain);
         localStorage.setItem("caption", data.token);
         alert("Login Successful");
         Nevigate("/caption-home");

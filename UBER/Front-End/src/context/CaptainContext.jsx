@@ -11,7 +11,8 @@ const CaptainContext = ({ children }) => {
     setcaptain(captainData);
   };
 
-  const value = {
+  const [value,setvalue ]= useState({
+    id:'',
     captain,
     isLoading,
     errors,
@@ -19,10 +20,10 @@ const CaptainContext = ({ children }) => {
     setisLoading,
     seterrors,
     updatecaptain,
-  };
+  });
 
   return (
-    <CaptainDatacontext.Provider value={value}>
+    <CaptainDatacontext.Provider value={{value,setvalue}}>
       {children}
     </CaptainDatacontext.Provider>
   );

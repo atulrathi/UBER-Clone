@@ -47,7 +47,7 @@ const captionSchema=new mongoose.Schema({
     vehicletype:{type:String,enum:["car","bike","van"]}
   },
   location:{
-    lat:{type:Number},
+    ltd:{type:Number},
     lng:{type:Number}
   }
 });
