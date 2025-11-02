@@ -26,6 +26,7 @@ const Home = () => {
   const [Payment, setPayment] = useState(false);
   const [Driver, setDriver] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [captiondata, setcaptiondata] = useState({})
 
   const panelref = useRef(null);
   const downerrow = useRef(null);
@@ -50,7 +51,7 @@ const Home = () => {
 
         if (res.status === 200) {
           let data = res.data;
-          setuser({...user, id: data._id});
+          setuser({...user, id: data._id,fullname:data.fullname});
         }
       } catch (err) {
         console.error("❌ Error fetching user:", err);
@@ -62,6 +63,13 @@ const Home = () => {
 
 
   }, [userid]);
+
+    socket.on('rideAccepted', (data) => {
+      setWating(false);
+      setDriver(true);
+      setcaptiondata(data);
+    console.log('Ride request received:', data);
+  });
 
   const submithndler = async (e) => {
     e.preventDefault();
@@ -331,7 +339,7 @@ const Home = () => {
           <WatingDriver destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />
         </div>
         <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
-          <Sharetrip setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment} />
+          <Sharetrip captiondata={captiondata} destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment} />
         </div>
         <div ref={Paymentref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
           <PaymentPanel setDriver={setDriver} setPayment={setPayment} />

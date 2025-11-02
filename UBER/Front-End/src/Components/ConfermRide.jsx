@@ -1,9 +1,30 @@
 import React, { useContext } from "react";
 import { UserDataContext } from "../context/userContext";
+import axios from "axios";
 
 const Vehicledetail = (props) => {
   const { user } = useContext(UserDataContext);
   const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+
+  function confermride(){
+    props.setWating(true);
+    props.setconfermride(false);
+
+    const rideDetails = axios.post("http://localhost:4000/ride/conferm", {
+      userID: user.id,
+      fullname: user.fullname.Firstname + " " + user.fullname.Lastname,
+      pickup: props.pickup,
+      destination: props.destination,
+      distance: user.distance,
+      duration: user.duration,
+      fare: vehicle.fare,
+    });
+    rideDetails.then((res)=>{
+      console.log(res.data);
+    }).catch((err)=>{
+      console.log(err);
+    });
+  }
 
   return (
     <div>
@@ -76,8 +97,7 @@ const Vehicledetail = (props) => {
         <div className="w-full flex justify-center items-center">
           <button
             onClick={() => {
-              props.setWating(true);
-              props.setconfermride(false);
+              confermride();
             }}
             className="py-4 px-12 bg-green-500 hover:bg-green-600 transition rounded-2xl shadow-md"
           >

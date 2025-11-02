@@ -3,7 +3,10 @@ import { UserDataContext } from "../context/userContext";
 
 const DriverDetails = (props) => {
 
+  console.log(props.captiondata);
+
   const { user, setuser } = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
 
   return (
 
@@ -24,7 +27,7 @@ const DriverDetails = (props) => {
         {/* Driver Image */}
       
         <div className="flex-1">
-          <h2 className="text-lg font-semibold">Ravi Kumar</h2>
+          <h2 className="text-lg font-semibold">Ravi Kumar </h2>
           <p className="text-gray-600 text-sm">⭐ 4.8 • 1,245 rides</p>
         </div>
 
@@ -37,11 +40,11 @@ const DriverDetails = (props) => {
       {/* Vehicle Info */}
       <div className="flex items-center justify-between p-4 rounded-lg  mb-6">
         <div>
-          <h2 className="font-semibold text-lg">Maruti Suzuki Swift</h2>
-          <p className="text-gray-600 text-sm">White • 4 Seater</p>
+          <h2 className="font-semibold text-lg">maruti</h2>
+          <p className="text-gray-600 text-sm">white • 4 Seater</p>
         </div>
         <div className="text-right">
-          <h2 className="text-xl font-bold">HR 26 DK 9876</h2>
+          <h2 className="text-xl font-bold">HR 10 AE 6453</h2>
           <p className="text-gray-500 text-sm">Number Plate</p>
         </div>
       </div>
@@ -52,9 +55,8 @@ const DriverDetails = (props) => {
         <div className="flex gap-3 items-start p-3 ">
           <i className="ri-map-pin-3-fill text-xl text-green-600"></i>
           <div>
-            <h2 className="font-semibold text-base">562/11</h2>
             <p className="text-gray-600 text-sm">
-              Kankarriya Talab, Chatiya Aulia
+              <h2 className="font-semibold text-base">{props.pickup}</h2>
             </p>
           </div>
         </div>
@@ -63,8 +65,7 @@ const DriverDetails = (props) => {
         <div className="flex gap-3 items-start p-3 ">
           <i className="ri-map-pin-line text-xl text-red-500"></i>
           <div>
-            <h2 className="font-semibold text-base">Sonipat</h2>
-            <p className="text-gray-600 text-sm">Near Indra</p>
+            <h2 className="font-semibold text-base">{props.destination}</h2>
           </div>
         </div>
       </div>
@@ -72,7 +73,7 @@ const DriverDetails = (props) => {
       {/* Payment Info */}
       <div className="flex items-center justify-between p-4  mb-6">
         <div>
-          <h2 className="text-lg font-semibold">&#8377;193.20</h2>
+          <h2 className="text-lg font-semibold">&#8377;{vehicle.fare}</h2>
           <p className="text-gray-600 text-sm">{user.payment}</p>
         </div>
         <button onClick={()=>{

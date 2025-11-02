@@ -1,6 +1,7 @@
 const fetch = require("node-fetch");
-const axios = require('axios')
-const { getCoordinates, calculateFare } = require('../services/geocoding')
+const axios = require('axios');
+const { getCoordinates, calculateFare } = require('../services/geocoding');
+
 
 module.exports.getDrivingDistance = async (req, res) => {
   try {

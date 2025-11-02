@@ -10,12 +10,13 @@ const cookieParser=require("cookie-parser");
 const JWT = require('jsonwebtoken');
 const finddistance = require('./Router/finddistance');
 const setuser = require('./Router/setuser');
-const setcaption = require('./Router/setcaption')
+const setcaption = require('./Router/setcaption');
+const conferm = require('./Router/conferm');
 
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://1fnrttmg-5173.inc1.devtunnels.ms",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -29,5 +30,6 @@ app.use("/caption",captionRoutes);
 app.use('/distance',finddistance);
 app.use('/setuser',setuser);
 app.use('/setcaption',setcaption);
+app.use('/ride',conferm)
 
 module.exports=app;

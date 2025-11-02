@@ -17,8 +17,9 @@ const CaptainHome = () => {
   const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
 
   const [OTP, setOTP] = useState(false)
-  const [newride, setnewride] = useState(true)
+  const [newride, setnewride] = useState(false)
   const [Ridestart, setRidestart] = useState(false)
+  const [ridedata, setridedata] = useState({})
   const Ridestartref = useRef(null)
   const Otpref = useRef(null)
   const Newrideref = useRef(null)
@@ -46,7 +47,27 @@ const CaptainHome = () => {
     if (token) fetchUser();
     socket.emit('join', { usertype: 'caption', userID:captionid})
 
+    const interval = setInterval(() => {
+      if ('geolocation' in navigator) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const location = {
+            ltd: position.coords.latitude,
+            lng: position.coords.longitude
+          };
+          socket.emit('location-update-caption', { userID: captionid, location });
+        });
+      }
+    }, 10000);
+
+    return () => clearInterval(interval);
+
   }, [captionid]);
+
+  socket.on('rideRequest', (data) => {
+    setnewride(true);
+    setridedata(data);
+    console.log('Ride request received:', data);
+  });
 
     useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -155,13 +176,13 @@ const CaptainHome = () => {
         </div>
       </div>
       <div ref={Newrideref} className='fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white rounded-tl-xl rounded-tr-xl translate-y-full'>
-        <Newride setnewride={setnewride} setRidestart={setRidestart}/>
+        <Newride ridedata={ridedata} setnewride={setnewride} setRidestart={setRidestart}/>
       </div>
       <div ref={Otpref} className='fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white rounded-tl-xl rounded-tr-xl translate-y-full'>
         <OTPVerification setOTP={setOTP}/>
       </div>
       <div ref={Ridestartref} className='fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white rounded-tl-xl rounded-tr-xl translate-y-full'>
-        <Rideconfirm setOTP={setOTP} setRidestart={setRidestart}/>
+        <Rideconfirm ridedata={ridedata} setOTP={setOTP} setRidestart={setRidestart}/>
       </div>
     </div>
   )

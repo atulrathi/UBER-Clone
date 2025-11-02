@@ -7,6 +7,7 @@ module.exports.registercaption=async(req,res)=>{
   const { fullname, email, password } = req.body;
   const captionalreadyexists=await captionmodel.findOne({email});
   if(captionalreadyexists){
+    console.log('already caption');
     return res.status(400).json({message:"caption already exists"});
   };
 

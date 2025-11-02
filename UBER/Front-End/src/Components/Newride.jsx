@@ -1,19 +1,32 @@
 import React, { useContext, useRef, useState } from "react";
 import { UserDataContext } from "../context/userContext";
-const Riderequest = (props) => {
+import {CaptainDatacontext} from "../context/CaptainContext";
+import { io } from "socket.io-client";
 
+const socket = io("http://localhost:4000");
+
+const Riderequest = (props) => {
   const {user} = useContext(UserDataContext);
   const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const { value,setvalue } = useContext(CaptainDatacontext);
+
+  function rideaccept(){
+    props.setRidestart(true);
+
+      socket.emit("ride-accepted", {
+        userID: props.ridedata.userID,
+        captionID: value.id,
+    });
+  }
 
 
   return (
     <div className="w-full bg-white rounded-t-2xl shadow-lg p-5 flex items-start gap-4">
       {/* Rider Image - Fixed Width */}
       <div className="flex-shrink-0">
-        <img
-          alt="Rider"
-          className="w-16 h-16 rounded-full object-cover border border-gray-300"
-        />
+        <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-lg font-semibold text-gray-700">
+          {props.ridedata.fullname?.charAt(0).toUpperCase()}
+        </div>
       </div>
 
       {/* Ride Details - Full Remaining Width */}
@@ -24,18 +37,18 @@ const Riderequest = (props) => {
           New Ride Request
         </h2>
         <p className="text-sm text-gray-600 mb-3">
-          Ravikumar has requested a ride. Please review the details below.
+          {props.ridedata.fullname} has requested a ride. Please review the details below.
         </p>
 
         {/* Ride Info */}
         <p className="text-sm text-gray-700">
-          <span className="font-medium">Pickup:</span> VPO catiya ualia
+          <span className="font-medium">Pickup:</span>{props.ridedata.pickup}
         </p>
         <p className="text-sm text-gray-700">
-          <span className="font-medium">Destination:</span> shahdara
+          <span className="font-medium">Destination:</span>{props.ridedata.destination}
         </p>
         <p className="text-sm text-gray-700 mb-3">
-          <span className="font-medium">Estimated Fare:</span> ₹{vehicle.fare}
+          <span className="font-medium">Estimated Fare:</span> ₹{props.ridedata.fare}
         </p>
 
         {/* Buttons */}
@@ -47,7 +60,9 @@ const Riderequest = (props) => {
             Reject
           </button>
           <button
-          onClick={()=>{props.setRidestart(true); console.log("click")}}
+          onClick={()=>{
+            rideaccept();
+          }}
             className="flex-1 bg-green-600 text-white font-medium py-2 rounded-xl hover:bg-green-700 transition"
           >
             Accept

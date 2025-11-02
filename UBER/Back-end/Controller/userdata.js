@@ -36,9 +36,10 @@ module.exports.captiondata = async (req, res) => {
     // 1️⃣ Get token from Authorization header
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      console.log('no token provided')
       return res.status(401).json({ error: "No token provided" });
     }
-
+ 
     const token = authHeader.split(" ")[1];
 
     // 2️⃣ Verify JWT
