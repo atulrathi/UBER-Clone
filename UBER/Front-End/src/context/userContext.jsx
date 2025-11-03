@@ -19,7 +19,8 @@ const UserContext = ({ children }) => {
       bike: '',
       auto: '',
     },
-    selectedVehicle: ''
+    selectedVehicle: '',
+    otp: '',
   });
 
   return (

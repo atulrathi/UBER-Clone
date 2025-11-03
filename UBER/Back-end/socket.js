@@ -92,7 +92,7 @@ function initializeSocket(server) {
           }
         });
 
-        console.log(`✅ Ride accepted by ${ caption.fullname}, sent to user ${user.fullname}`);
+        console.log(` Ride accepted by ${ caption.fullname}, sent to user ${user.fullname}`);
       } catch (error) {
         console.error('Error in ride-accepted event:', error);
       }

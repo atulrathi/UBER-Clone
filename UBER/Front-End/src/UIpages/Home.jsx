@@ -6,7 +6,9 @@ import LocationSearchpannel from "../Components/LocationSearchpannel";
 import SelectVehicle from "../Components/selectVehicle";
 import ConfermRide from "../Components/ConfermRide";
 import WatingDriver from "../Components/WatingDriver";
-import Sharetrip from '../Components/Sharetrip'
+import Sharetrip from '../Components/Sharetrip';
+import OtpScreen from "../Components/otpscreen";
+import RideDetails from "../Components/ridedeatils";
 import PaymentPanel from "../Components/Payment";
 import GeoMap from "../Components/MapComponent";
 import axios from 'axios';
@@ -26,7 +28,8 @@ const Home = () => {
   const [Payment, setPayment] = useState(false);
   const [Driver, setDriver] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [captiondata, setcaptiondata] = useState({})
+  const [captiondata, setcaptiondata] = useState({});
+  const [otp, setotp] = useState('');
 
   const panelref = useRef(null);
   const downerrow = useRef(null);
@@ -35,9 +38,10 @@ const Home = () => {
   const waitingref = useRef(null);
   const Paymentref = useRef(null);
   const driverref = useRef(null);
+  const otpref = useRef(null);
 
   const { user, setuser } = useContext(UserDataContext);
-  let userid=user.id;
+  let userid = user.id;
   const { socket } = useContext(SocketContext);
 
   useEffect(() => {
@@ -51,25 +55,36 @@ const Home = () => {
 
         if (res.status === 200) {
           let data = res.data;
-          setuser({...user, id: data._id,fullname:data.fullname});
+          setuser({ ...user, id: data._id, fullname: data.fullname });
         }
       } catch (err) {
         console.error("❌ Error fetching user:", err);
       }
     }
 
-    if (token) fetchUser();    
-    socket.emit('join', { usertype: 'user', userID:userid })
+    if (token) fetchUser();
+    socket.emit('join', { usertype: 'user', userID: userid })
 
 
   }, [userid]);
 
-    socket.on('rideAccepted', (data) => {
+  useEffect(() => {
+    if (!socket) return;
+
+    const handleRideAccepted = (data) => {
+      console.log('✅ Ride Accepted Data:', data);
       setWating(false);
       setDriver(true);
       setcaptiondata(data);
-    console.log('Ride request received:', data);
-  });
+    };
+
+    socket.on('rideAccepted', handleRideAccepted);
+
+    return () => {
+      socket.off('rideAccepted', handleRideAccepted); // cleanup
+    };
+  }, [socket]);
+
 
   const submithndler = async (e) => {
     e.preventDefault();
@@ -87,10 +102,10 @@ const Home = () => {
         ...user, duration: totaldis.data.
           duration_min
         , distance: totaldis.data.distance_km,
-        fare:{
-          car:totaldis.data.fare.car,
-          bike:totaldis.data.fare.bike,
-          auto:totaldis.data.fare.auto
+        fare: {
+          car: totaldis.data.fare.car,
+          bike: totaldis.data.fare.bike,
+          auto: totaldis.data.fare.auto
         }
       })
       console.log(user)
@@ -189,6 +204,25 @@ const Home = () => {
     });
     return () => ctx.revert();
   }, [Wating]);
+
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
+      if (otp) {
+        gsap.to(otpref.current, {
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+      } else {
+        gsap.to(otpref.current, {
+          y: "100%",
+          duration: 0.6,
+          ease: "power3.in",
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, [otp, otpref]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -315,35 +349,54 @@ const Home = () => {
           ref={vehiclepannelref}
           className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white px-3 py-6 translate-y-full"
         >
-          <SelectVehicle setisup={setisup} setconfermride={setconfermride} setVehiclepannel={setVehiclepannel} />
+          {Vehiclepannel && <SelectVehicle setisup={setisup} setconfermride={setconfermride} setVehiclepannel={setVehiclepannel} />}
         </div>
 
         <div
           ref={confermref}
           className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-full"
         >
-          <ConfermRide
+         {confermride && <ConfermRide
             pickup={pickup}
             destination={destination}
             setWating={setWating}
             setconfermride={setconfermride}
             setisup={setisup}
             setVehiclepannel={setVehiclepannel}
-          />
+          />}
         </div>
 
         <div
           ref={waitingref}
           className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]"
         >
-          <WatingDriver destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />
+          {Wating && <WatingDriver destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />}
         </div>
         <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
-          <Sharetrip captiondata={captiondata} destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} setPayment={setPayment} />
+          {Driver && captiondata && (
+            <Sharetrip
+              captiondata={captiondata}
+              destination={destination}
+              pickup={pickup}
+              setVehiclepannel={setVehiclepannel}
+              setisup={setisup}
+              setWating={setWating}
+              setPayment={setPayment}
+              setDriver={setDriver}
+              setotp={setotp}
+            />
+          )}
         </div>
         <div ref={Paymentref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
           <PaymentPanel setDriver={setDriver} setPayment={setPayment} />
         </div>
+        <div ref={otpref} className="fixed flex flex-col gap-10 z-30 bottom-0 bg-transparent w-full">
+          {otp && <OtpScreen  captiondata={captiondata}/>}
+        </div>
+        {/* <div className="fixed flex flex-col gap-10 z-30 bottom-0 bg-transparent w-full">
+  <RideDetails />
+        </div> */}
+
       </div>
     </div>
   );

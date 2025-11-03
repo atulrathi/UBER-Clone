@@ -8,4 +8,4 @@ const mongoose=require("mongoose");
     console.log(err);
   } );
 
-module.exports = mongoose.connection;
+module.exports = mongoose.connection; 
