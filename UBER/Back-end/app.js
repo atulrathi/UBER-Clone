@@ -13,6 +13,7 @@ const setuser = require('./Router/setuser');
 const setcaption = require('./Router/setcaption');
 const conferm = require('./Router/conferm');
 const getotp = require('./Router/getotp');
+const ride = require('./Router/ride-start');
 
 app.use(cookieParser());
 app.use(
@@ -33,5 +34,6 @@ app.use('/setuser',setuser);
 app.use('/setcaption',setcaption);
 app.use('/ride',conferm);
 app.use('/otp',getotp);
+app.use('/start',ride);
 
 module.exports=app;

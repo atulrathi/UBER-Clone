@@ -87,6 +87,7 @@ function initializeSocket(server) {
         sendmessagetosocketid(user.socketID, {
           event: 'rideAccepted',
           data: {
+            captionSocketID: caption.socketID,
             captionname: caption.fullname,
             captionvehicle: caption.vehicleDetails,
           }

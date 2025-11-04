@@ -1,4 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const OTPVerification = ({
   phone = "",
@@ -6,40 +8,53 @@ const OTPVerification = ({
   onVerify = () => {},
   onResend = () => {},
   setOTP,
-},props) => {
+  otpdata,
+  ridedata,
+  setRidestart,
+  setnewride,
+  setbasic
+}) => {
   const [values, setValues] = useState(Array(length).fill(""));
   const inputsRef = useRef([]);
   const [error, setError] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
-  const [timer, setTimer] = useState(60); // seconds until resend allowed
+  const [timer, setTimer] = useState(60);
   const [isResending, setIsResending] = useState(false);
+  const navigate = useNavigate();
 
-  const oncancel=()=>{
-    setOTP(false)
-  }
+  const onCancel = () => {
+    setOTP(false);
+  };
 
   useEffect(() => {
-    // focus first input on mount
+    // Focus the first input when mounted
     inputsRef.current[0]?.focus();
   }, []);
 
   useEffect(() => {
-    // countdown for resend
+    // Countdown for resend
     if (timer <= 0) return;
     const id = setInterval(() => setTimer((t) => t - 1), 1000);
     return () => clearInterval(id);
   }, [timer]);
 
+  const updateAt = (idx, val) => {
+    setValues((prev) => {
+      const next = [...prev];
+      next[idx] = val;
+      return next;
+    });
+  };
+
   const handleChange = (e, idx) => {
     const raw = e.target.value;
-    // accept only digits
     const val = raw.replace(/[^0-9]/g, "");
+
     if (!val) {
       updateAt(idx, "");
       return;
     }
 
-    // if user pastes whole OTP into one input, distribute
     if (val.length > 1) {
       const next = [...values];
       for (let i = 0; i < val.length && idx + i < length; i++) {
@@ -52,16 +67,7 @@ const OTPVerification = ({
     }
 
     updateAt(idx, val);
-    // move focus to next
     if (val && idx < length - 1) inputsRef.current[idx + 1]?.focus();
-  };
-
-  const updateAt = (idx, val) => {
-    setValues((prev) => {
-      const next = [...prev];
-      next[idx] = val;
-      return next;
-    });
   };
 
   const handleKeyDown = (e, idx) => {
@@ -92,18 +98,33 @@ const OTPVerification = ({
   };
 
   const submit = async () => {
-    const code = values.join("");
+    // ✅ Read live values directly from inputs (ensures latest digit is included)
+    const liveValues = inputsRef.current.map((input) => input?.value || "");
+    const code = liveValues.join("");
+
     if (code.length !== length) {
       setError(`Please enter the ${length}-digit code sent to your phone.`);
       return;
     }
+
     setError("");
     setIsVerifying(true);
+
     try {
-      await onVerify(code);
+      // Compare with otpdata
+      if (code === otpdata?.otp?.toString()) {
+        alert("✅ OTP Verified Successfully!");
+        onVerify(code);
+        setOTP(false);
+        setRidestart(false);
+        setnewride(false);
+        setbasic(false);
+        const response = await axios.post("http://localhost:4000/start/ride",{ridedata});
+      } else {
+        setError("❌ Invalid OTP. Please try again.");
+      }
     } catch (err) {
-      // expect onVerify to throw or reject on failure
-      setError(err?.message || "Verification failed. Please try again.");
+      setError("Verification failed. Please try again.");
     } finally {
       setIsVerifying(false);
     }
@@ -114,7 +135,8 @@ const OTPVerification = ({
     setIsResending(true);
     try {
       await onResend();
-      setTimer(60); // reset countdown
+      setTimer(60);
+      alert("📩 A new OTP has been sent to your phone.");
     } catch (err) {
       setError(err?.message || "Could not resend code. Try again later.");
     } finally {
@@ -126,9 +148,11 @@ const OTPVerification = ({
     <div className="max-w-md w-full bg-white/90 backdrop-blur-md rounded-2xl shadow-lg p-6 mx-auto overflow-hidden">
       <h2 className="text-2xl font-semibold mb-1">Verify your phone</h2>
       <p className="text-sm text-gray-600 mb-4">
-        Enter the <strong>{length}-digit</strong> code we sent to <span className="font-medium">{phone}</span>.
+        Enter the <strong>{length}-digit</strong> code sent to{" "}
+        <span className="font-medium">{phone}</span>.
       </p>
 
+      {/* OTP Inputs */}
       <div
         className="flex gap-3 justify-center mb-4"
         onPaste={handlePaste}
@@ -152,8 +176,10 @@ const OTPVerification = ({
         ))}
       </div>
 
-      {error && <p className="text-sm text-red-600 mb-3">{error}</p>}
+      {/* Error */}
+      {error && <p className="text-sm text-red-600 mb-3 text-center">{error}</p>}
 
+      {/* Buttons */}
       <div className="flex gap-3 items-center">
         <button
           onClick={submit}
@@ -164,17 +190,18 @@ const OTPVerification = ({
         </button>
 
         <button
-          onClick={oncancel}
+          onClick={onCancel}
           className="px-4 py-2 rounded-lg border border-gray-200 font-medium text-sm"
         >
           Cancel
         </button>
       </div>
 
+      {/* Resend OTP */}
       <div className="mt-4 text-center text-sm text-gray-600">
         {timer > 0 ? (
           <span>
-            Didn't receive a code? You can resend in <strong>{timer}s</strong>.
+            Didn’t receive a code? You can resend in <strong>{timer}s</strong>.
           </span>
         ) : (
           <button
@@ -187,8 +214,10 @@ const OTPVerification = ({
         )}
       </div>
 
+      {/* Footer */}
       <div className="mt-6 text-xs text-gray-400 text-center">
-        By continuing, you agree to receive SMS messages for authentication. Message and data rates may apply.
+        By continuing, you agree to receive SMS messages for authentication.
+        Message and data rates may apply.
       </div>
     </div>
   );

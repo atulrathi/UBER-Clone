@@ -16,7 +16,9 @@ const Sharetrip = ({
   const { user,setuser} = useContext(UserDataContext);
 
   function rideshare() {
-    const rideDetails = axios.post("http://localhost:4000/otp/getotp")
+    const rideDetails = axios.post("http://localhost:4000/otp/getotp", {
+      captionSocketID: captiondata?.captionSocketID
+    })
     .then((response) => {
       if (response.status === 200) {
         const data = response.data;

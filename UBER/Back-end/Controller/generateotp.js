@@ -1,10 +1,13 @@
+const { sendmessagetosocketid } = require("../socket");
 
 module.exports.generateOtp = async (req, res) => {
   try {
 
+    const { captionSocketID } = req.body;
+
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    console.log("Generated OTP:", otp);
+    sendmessagetosocketid(captionSocketID, { event: "otp-generated", data: { otp } });
 
     res.status(200).json({
       success: true,

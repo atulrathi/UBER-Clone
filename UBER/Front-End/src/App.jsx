@@ -37,7 +37,11 @@ const App = () => {
           </Captainproctedwraper>
         }/>
         <Route path='/caption-home/logout' element={<CaptanLogout />} />
-        <Route path='/caption-ride' element={<Ridestart />} />
+        <Route path='/caption-ride' element={
+          <Captainproctedwraper>
+          <Ridestart />
+          </Captainproctedwraper>
+        } />
       </Routes>
     </div>
   )

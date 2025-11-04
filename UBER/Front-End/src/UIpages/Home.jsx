@@ -1,4 +1,4 @@
-import React, { useRef, useState, useContext } from "react";
+import React, { useRef, useState, useContext, useEffect } from "react";
 import { useGSAP } from "@GSAP/react";
 import gsap from "gsap";
 import "remixicon/fonts/remixicon.css";
@@ -6,17 +6,16 @@ import LocationSearchpannel from "../Components/LocationSearchpannel";
 import SelectVehicle from "../Components/selectVehicle";
 import ConfermRide from "../Components/ConfermRide";
 import WatingDriver from "../Components/WatingDriver";
-import Sharetrip from '../Components/Sharetrip';
+import Sharetrip from "../Components/Sharetrip";
 import OtpScreen from "../Components/otpscreen";
 import RideDetails from "../Components/ridedeatils";
 import PaymentPanel from "../Components/Payment";
 import GeoMap from "../Components/MapComponent";
-import axios from 'axios';
+import axios from "axios";
 import Loader from "../Components/Lodercomponent";
-import Lowinternet from '../Components/lowinternet'
-import { UserDataContext } from '../context/userContext';
-import { SocketContext } from '../context/SocketContext';
-import { useEffect } from "react";
+import Lowinternet from "../Components/lowinternet";
+import { UserDataContext } from "../context/userContext";
+import { SocketContext } from "../context/SocketContext";
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -29,7 +28,8 @@ const Home = () => {
   const [Driver, setDriver] = useState(false);
   const [loading, setLoading] = useState(false);
   const [captiondata, setcaptiondata] = useState({});
-  const [otp, setotp] = useState('');
+  const [otp, setotp] = useState("");
+  const [Ridestart, setRidestart] = useState(false);
 
   const panelref = useRef(null);
   const downerrow = useRef(null);
@@ -39,6 +39,7 @@ const Home = () => {
   const Paymentref = useRef(null);
   const driverref = useRef(null);
   const otpref = useRef(null);
+  const Ridestartref = useRef(null);
 
   const { user, setuser } = useContext(UserDataContext);
   let userid = user.id;
@@ -46,13 +47,11 @@ const Home = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-
     async function fetchUser() {
       try {
         const res = await axios.get("http://localhost:4000/setuser/userdata", {
           headers: { Authorization: `Bearer ${token}` },
         });
-
         if (res.status === 200) {
           let data = res.data;
           setuser({ ...user, id: data._id, fullname: data.fullname });
@@ -61,62 +60,65 @@ const Home = () => {
         console.error("❌ Error fetching user:", err);
       }
     }
-
     if (token) fetchUser();
-    socket.emit('join', { usertype: 'user', userID: userid })
-
-
+    socket.emit("join", { usertype: "user", userID: userid });
   }, [userid]);
 
   useEffect(() => {
     if (!socket) return;
-
     const handleRideAccepted = (data) => {
-      console.log('✅ Ride Accepted Data:', data);
+      console.log("✅ Ride Accepted Data:", data);
       setWating(false);
       setDriver(true);
       setcaptiondata(data);
     };
-
-    socket.on('rideAccepted', handleRideAccepted);
-
+    socket.on("rideAccepted", handleRideAccepted);
     return () => {
-      socket.off('rideAccepted', handleRideAccepted); // cleanup
+      socket.off("rideAccepted", handleRideAccepted);
     };
   }, [socket]);
 
+    useEffect(() => {
+    if (!socket) return;
+    const ridestarte = (data) => {
+      console.log("Ride started data received in User:", data);
+    setRidestart(true);
+    setotp(false);
+    };
+    socket.on("RIDE_STARTED", ridestarte);
+    return () => {
+      socket.off("RIDE_STARTED", ridestarte);
+    };
+  }, [socket]);
 
   const submithndler = async (e) => {
     e.preventDefault();
     setisup(false);
-    setVehiclepannel(true);
     setLoading(true);
-
     try {
       const totaldis = await axios.post(
         "http://localhost:4000/distance/time-distance",
         { pickup, destination }
       );
-      console.log(totaldis.data);
       setuser({
-        ...user, duration: totaldis.data.
-          duration_min
-        , distance: totaldis.data.distance_km,
+        ...user,
+        duration: totaldis.data.duration_min,
+        distance: totaldis.data.distance_km,
         fare: {
           car: totaldis.data.fare.car,
           bike: totaldis.data.fare.bike,
-          auto: totaldis.data.fare.auto
-        }
-      })
-      console.log(user)
+          auto: totaldis.data.fare.auto,
+        },
+      });
     } catch (err) {
       console.error(err);
     } finally {
       setLoading(false);
+      setVehiclepannel(true);
     }
   };
 
-  // 📌 Location Search Panel
+  // GSAP animations (unchanged)
   useGSAP(() => {
     const ctx = gsap.context(() => {
       if (isup) {
@@ -124,7 +126,7 @@ const Home = () => {
           height: "70%",
           duration: 0.6,
           ease: "power2.out",
-          overflow: 'scroll'
+          overflow: "scroll",
         });
         gsap.to(downerrow.current, { opacity: 1, duration: 0.3 });
         gsap.to(panelref.current.children, {
@@ -145,7 +147,6 @@ const Home = () => {
     return () => ctx.revert();
   }, [isup]);
 
-  // 📌 Vehicle Panel
   useGSAP(() => {
     const ctx = gsap.context(() => {
       if (Vehiclepannel) {
@@ -165,7 +166,6 @@ const Home = () => {
     return () => ctx.revert();
   }, [Vehiclepannel]);
 
-  // 📌 Confirm Ride Panel
   useGSAP(() => {
     const ctx = gsap.context(() => {
       if (confermride) {
@@ -185,7 +185,6 @@ const Home = () => {
     return () => ctx.revert();
   }, [confermride]);
 
-  // 📌 Waiting Driver Panel
   useGSAP(() => {
     const ctx = gsap.context(() => {
       if (Wating) {
@@ -223,6 +222,25 @@ const Home = () => {
     });
     return () => ctx.revert();
   }, [otp, otpref]);
+
+useGSAP(() => {
+  const ctx = gsap.context(() => {
+    if (Ridestart) {
+      gsap.to(Ridestartref.current, {
+        y: 0,
+        duration: 0.6,
+        ease: "power3.out",
+      });
+    } else {
+      gsap.to(Ridestartref.current, {
+        y: "100%",
+        duration: 0.6,
+        ease: "power3.in",
+      });
+    }
+  });
+  return () => ctx.revert();
+}, [Ridestart,Ridestartref]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -263,35 +281,26 @@ const Home = () => {
   }, [Driver, driverref]);
 
   return (
-    <div className="relative h-screen overflow-hidden">
+    <div className="relative h-screen w-screen overflow-hidden bg-gray-50">
       {loading && <Loader />}
-      {/* Uber Logo */}
-
       <Lowinternet />
 
+      {/* Uber Logo */}
       <img
-        className="z-20 fixed w-[5rem] h-6 ml-[2rem] mt-[3rem]"
+        className="fixed z-20 w-24 md:w-32 top-5 left-5"
         src="./public/uber-logo.png"
-        alt=""
+        alt="Uber Logo"
       />
 
-      {/* Background Map/Gif */}
-      <div className="absolute inset-0 z-10">
-        <GeoMap pickup={pickup} destination={destination} />
-      </div>
+      {/* ✅ Responsive Map Fix */}
+{/* Background Map/Gif */}
+<div className="absolute inset-0 z-19 w-screen h-screen min-h-screen">
+  <GeoMap pickup={pickup} destination={destination} />
+</div>
 
-
-
-      {/* 🔥 Overlay Backdrop */}
-      <div
-        className={`fixed inset-0 bg-black/50 z-10 transition-opacity duration-300 ${Vehiclepannel || confermride || Wating ? "opacity-100" : "opacity-0 pointer-events-none"
-          }`}
-      />
-
-      {/* Main UI Panels */}
-      <div className="absolute top-0 h-screen w-full flex flex-col justify-end z-20">
-        {/* Search Form */}
-        <div className="p-5 bg-white rounded-tr-2xl rounded-tl-2xl">
+      {/* Bottom Panels */}
+      <div className="fixed bottom-0 w-full h-full flex flex-col justify-end z-20">
+        <div className="p-5 bg-white rounded-tr-2xl rounded-tl-2xl shadow-lg">
           <h4
             ref={downerrow}
             onClick={() => setisup(false)}
@@ -309,7 +318,7 @@ const Home = () => {
               onClick={() => setisup(true)}
               className="bg-[#eeeeee] outline-none px-8 py-2 text-lg rounded-lg w-full mb-3"
               type="text"
-              placeholder="Add a pickup location "
+              placeholder="Add a pickup location"
             />
             <h1 className="text-lg mb-1">Where to go?</h1>
             <input
@@ -319,60 +328,85 @@ const Home = () => {
               onClick={() => setisup(true)}
               className="bg-[#eeeeee] outline-none px-8 py-2 text-lg rounded-lg w-full"
               type="text"
-              placeholder="Enter your Destination "
+              placeholder="Enter your Destination"
             />
             <div className="flex w-full justify-end">
               <button
                 disabled={!(pickup?.length >= 3 && destination?.length >= 3)}
-                onClick={() => { submithndler }}
-                className={`px-3 py-1 ml-[70%] mt-2 rounded-xl transition 
-      ${(pickup?.length >= 3 && destination?.length >= 3)
+                className={`px-3 py-1 ml-auto mt-3 rounded-xl transition ${
+                  pickup?.length >= 3 && destination?.length >= 3
                     ? "bg-green-400 cursor-pointer"
-                    : "bg-gray-300 cursor-not-allowed"}`}
+                    : "bg-gray-300 cursor-not-allowed"
+                }`}
               >
                 Find Ride
               </button>
             </div>
-
-
           </form>
         </div>
 
-        {/* Panels */}
+        {/* Other Panels (unchanged) */}
         <div ref={panelref} className="h-0 bg-white mt-[-1px] overflow-hidden">
           <div className="opacity-0">
-            <LocationSearchpannel destination={destination} setdestination={setdestination} setpickup={setpickup} pickup={pickup} setisup={setisup} setVehiclepannel={setVehiclepannel} />
+            <LocationSearchpannel
+              destination={destination}
+              setdestination={setdestination}
+              setpickup={setpickup}
+              pickup={pickup}
+              setisup={setisup}
+              setVehiclepannel={setVehiclepannel}
+            />
           </div>
         </div>
 
         <div
           ref={vehiclepannelref}
-          className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white px-3 py-6 translate-y-full"
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white px-3 py-6 translate-y-full rounded-t-2xl"
         >
-          {Vehiclepannel && <SelectVehicle setisup={setisup} setconfermride={setconfermride} setVehiclepannel={setVehiclepannel} />}
+          {Vehiclepannel && (
+            <SelectVehicle
+              setisup={setisup}
+              setconfermride={setconfermride}
+              setVehiclepannel={setVehiclepannel}
+            />
+          )}
         </div>
 
         <div
           ref={confermref}
-          className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-full"
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white translate-y-full rounded-t-2xl"
         >
-         {confermride && <ConfermRide
-            pickup={pickup}
-            destination={destination}
-            setWating={setWating}
-            setconfermride={setconfermride}
-            setisup={setisup}
-            setVehiclepannel={setVehiclepannel}
-          />}
+          {confermride && (
+            <ConfermRide
+              pickup={pickup}
+              destination={destination}
+              setWating={setWating}
+              setconfermride={setconfermride}
+              setisup={setisup}
+              setVehiclepannel={setVehiclepannel}
+            />
+          )}
         </div>
 
         <div
           ref={waitingref}
-          className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]"
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white translate-y-[200%] rounded-t-2xl"
         >
-          {Wating && <WatingDriver destination={destination} pickup={pickup} setVehiclepannel={setVehiclepannel} setisup={setisup} setWating={setWating} />}
+          {Wating && (
+            <WatingDriver
+              destination={destination}
+              pickup={pickup}
+              setVehiclepannel={setVehiclepannel}
+              setisup={setisup}
+              setWating={setWating}
+            />
+          )}
         </div>
-        <div ref={driverref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
+
+        <div
+          ref={driverref}
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white translate-y-[200%] rounded-t-2xl"
+        >
           {Driver && captiondata && (
             <Sharetrip
               captiondata={captiondata}
@@ -387,16 +421,27 @@ const Home = () => {
             />
           )}
         </div>
-        <div ref={Paymentref} className="fixed w-full flex flex-col gap-10 z-30 bottom-0 bg-white translate-y-[200%]">
+
+        <div
+          ref={Paymentref}
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white translate-y-[200%] rounded-t-2xl"
+        >
           <PaymentPanel setDriver={setDriver} setPayment={setPayment} />
         </div>
-        <div ref={otpref} className="fixed flex flex-col gap-10 z-30 bottom-0 bg-transparent w-full">
-          {otp && <OtpScreen  captiondata={captiondata}/>}
-        </div>
-        {/* <div className="fixed flex flex-col gap-10 z-30 bottom-0 bg-transparent w-full">
-  <RideDetails />
-        </div> */}
 
+        <div
+          ref={otpref}
+          className="fixed bottom-0 left-0 flex flex-col gap-10 z-30 w-full bg-transparent"
+        >
+          {otp && <OtpScreen captiondata={captiondata} />}
+        </div>
+
+        <div
+         ref={Ridestartref}
+          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white rounded-t-2xl"
+        >
+         <RideDetails />
+        </div>
       </div>
     </div>
   );
