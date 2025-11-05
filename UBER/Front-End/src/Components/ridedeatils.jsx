@@ -1,8 +1,17 @@
-import React from "react";
+import React, { useContext } from "react";
 import "remixicon/fonts/remixicon.css";
+import { UserDataContext } from "../context/userContext";
 
-const RideDetails = () => {
-  // 🔹 Temporary mock data (replace with backend data later)
+const RideDetails = ({ pickup, destination, captiondata }) => {
+  const { user, setuser } = useContext(UserDataContext);
+  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const driver = captiondata?.captionname || {};
+  const vehicledetails = captiondata?.captionvehicle || {};
+  const driverFullName =
+    driver?.Firstname && driver?.Lastname
+      ? `${driver.Firstname} ${driver.Lastname}`
+      : "Driver not assigned";
+
   const rideData = {
     driver: {
       name: "Sourav Rathi",
@@ -45,7 +54,7 @@ const RideDetails = () => {
         />
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            {rideData.driver.name}
+            {driverFullName}
           </h2>
           <p className="text-gray-600 text-sm flex items-center gap-1">
             <i className="ri-star-fill text-yellow-400"></i>{" "}
@@ -63,11 +72,11 @@ const RideDetails = () => {
         <div className="space-y-1 text-gray-700 text-sm">
           <p>
             <span className="font-medium text-gray-900">
-              {rideData.vehicle.model}
+              {vehicledetails.model}
             </span>{" "}
-            ({rideData.vehicle.color})
+            ({vehicledetails.color})
           </p>
-          <p>Number Plate: {rideData.vehicle.number}</p>
+          <p>Number Plate: {vehicledetails.numberplate}</p>
         </div>
       </div>
 
@@ -79,29 +88,29 @@ const RideDetails = () => {
         <div className="text-gray-700 text-sm space-y-2">
           <p>
             <span className="font-medium text-gray-900">Pickup:</span>{" "}
-            {rideData.trip.pickup}
+            {pickup}
           </p>
           <p>
             <span className="font-medium text-gray-900">Destination:</span>{" "}
-            {rideData.trip.destination}
+            {destination}
           </p>
           <p>
             <span className="font-medium text-gray-900">Distance:</span>{" "}
-            {rideData.trip.distance}
+            {user.distance}
           </p>
           <p>
             <span className="font-medium text-gray-900">Duration:</span>{" "}
-            {rideData.trip.duration}
+            {user.duration}
           </p>
           <p className="text-lg font-semibold text-green-600">
-            Fare: {rideData.trip.fare}
+            Fare: {vehicle.fare}
           </p>
         </div>
       </div>
 
       {/* Footer Note */}
       <p className="text-gray-500 text-xs text-center mt-4 mb-6">
-        You can view trip details anytime during your ride.  
+        You can view trip details anytime during your ride.
         Stay safe and enjoy your journey!
       </p>
     </div>

@@ -39,7 +39,7 @@ module.exports.getDrivingDistance = async (req, res) => {
     console.log(distance / 1000, duration / 60)
     res.json({
       distance_km: distanceKm.toFixed(2),
-      duration_min: durationMin.toFixed(2),
+      duration_min: durationMin.toFixed(1),
       fare: {
         car: carFare.toFixed(2),
         bike: bikeFare.toFixed(2),

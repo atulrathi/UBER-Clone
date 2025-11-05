@@ -39,7 +39,7 @@ const Home = () => {
   const Paymentref = useRef(null);
   const driverref = useRef(null);
   const otpref = useRef(null);
-  const Ridestartref = useRef(null);
+  const RideStartref = useRef(null);
 
   const { user, setuser } = useContext(UserDataContext);
   let userid = user.id;
@@ -88,6 +88,23 @@ const Home = () => {
     socket.on("RIDE_STARTED", ridestarte);
     return () => {
       socket.off("RIDE_STARTED", ridestarte);
+    };
+  }, [socket]);
+
+      useEffect(() => {
+    if (!socket) return;
+    const ridecomplete = (data) => {
+      setisup(false);
+      setVehiclepannel(false);
+      setconfermride(false);
+      setWating(false);
+      setDriver(false);
+      setRidestart(false);
+      alert("Ride Completed Successfully");
+    };
+    socket.on("rideCompleted", ridecomplete);
+    return () => {
+      socket.off("rideCompleted", ridecomplete);
     };
   }, [socket]);
 
@@ -226,21 +243,21 @@ const Home = () => {
 useGSAP(() => {
   const ctx = gsap.context(() => {
     if (Ridestart) {
-      gsap.to(Ridestartref.current, {
+      gsap.to(RideStartref.current, {
         y: 0,
         duration: 0.6,
         ease: "power3.out",
       });
     } else {
-      gsap.to(Ridestartref.current, {
-        y: "100%",
+      gsap.to(RideStartref.current, {
+        y: "200%",
         duration: 0.6,
         ease: "power3.in",
       });
     }
   });
   return () => ctx.revert();
-}, [Ridestart,Ridestartref]);
+}, [Ridestart,RideStartref]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -437,10 +454,10 @@ useGSAP(() => {
         </div>
 
         <div
-         ref={Ridestartref}
-          className="fixed bottom-0 left-0 w-full flex flex-col gap-10 z-30 bg-white rounded-t-2xl"
+          ref={RideStartref}
+          className="fixed top-0 h-screen left-0 w-full flex flex-col  translate-y-[200%] gap-10 z-30 bg-white rounded-t-2xl"
         >
-         <RideDetails />
+         <RideDetails captiondata={captiondata} pickup={pickup} destination={destination} />
         </div>
       </div>
     </div>

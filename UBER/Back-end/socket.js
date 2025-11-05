@@ -99,6 +99,27 @@ function initializeSocket(server) {
       }
     });
 
+    socket.on('ride-completed', async (data) => {
+      try {
+        const { userID } = data;
+        if( !userID || !mongoose.Types.ObjectId.isValid(userID) ) {
+          console.log('⚠️ Invalid userID in ride-completed:', data);
+          return;
+        }
+        const user = await usermodel.findById(userID);
+        if(!user) {
+          console.log('⚠️ User not found for ride-completed');
+          return;
+        }
+        sendmessagetosocketid(user.socketID, {
+          event: 'rideCompleted',
+          data: { message: 'Your ride has been completed successfully.' }
+        });
+        console.log(`✅ Ride completed notification sent to user ${user.fullname}`);
+      } catch (error) {
+        console.error('Error in ride-completed event:', error);
+      }});
+
     // DISCONNECT
     socket.on('disconnect', () => {
       console.log('🔴 Client disconnected:', socket.id);

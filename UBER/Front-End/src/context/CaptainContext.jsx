@@ -13,6 +13,7 @@ const CaptainContext = ({ children }) => {
 
   const [value,setvalue ]= useState({
     id:'',
+    captionname: '',
     captain,
     isLoading,
     errors,

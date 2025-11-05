@@ -1,21 +1,21 @@
 import React, { useContext, useRef, useState } from "react";
 import { UserDataContext } from "../context/userContext";
-import {CaptainDatacontext} from "../context/CaptainContext";
+import { CaptainDatacontext } from "../context/CaptainContext";
 import { io } from "socket.io-client";
 
 const socket = io("http://localhost:4000");
 
 const Riderequest = (props) => {
-  const {user} = useContext(UserDataContext);
+  const { user } = useContext(UserDataContext);
   const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
-  const { value,setvalue } = useContext(CaptainDatacontext);
+  const { value, setvalue } = useContext(CaptainDatacontext);
 
-  function rideaccept(){
+  function rideaccept() {
     props.setRidestart(true);
 
-      socket.emit("ride-accepted", {
-        userID: props.ridedata.userID,
-        captionID: value.id,
+    socket.emit("ride-accepted", {
+      userID: props.ridedata.userID,
+      captionID: value.id,
     });
   }
 
@@ -32,7 +32,7 @@ const Riderequest = (props) => {
       {/* Ride Details - Full Remaining Width */}
       <div className="flex-1">
         {/* New Ride Header */}
-        <i onClick={()=>{props.setnewride(false)}} className="ri-close-large-line absolute top-4 right-6"></i>
+        <i onClick={() => { props.setnewride(false) }} className="ri-close-large-line absolute top-4 right-6"></i>
         <h2 className="text-lg font-semibold text-gray-900 mb-1">
           New Ride Request
         </h2>
@@ -54,15 +54,15 @@ const Riderequest = (props) => {
         {/* Buttons */}
         <div className="flex gap-3">
           <button
-          onClick={()=>{props.setnewride(false)}}
+            onClick={() => { props.setnewride(false) }}
             className="flex-1 bg-gray-200 text-gray-800 font-medium py-2 rounded-xl hover:bg-gray-300 transition"
           >
             Reject
           </button>
           <button
-          onClick={()=>{
-            rideaccept();
-          }}
+            onClick={() => {
+              rideaccept();
+            }}
             className="flex-1 bg-green-600 text-white font-medium py-2 rounded-xl hover:bg-green-700 transition"
           >
             Accept

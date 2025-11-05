@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState,useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
@@ -12,7 +12,8 @@ const OTPVerification = ({
   ridedata,
   setRidestart,
   setnewride,
-  setbasic
+  setbasic,
+  setRideup,
 }) => {
   const [values, setValues] = useState(Array(length).fill(""));
   const inputsRef = useRef([]);
@@ -119,6 +120,7 @@ const OTPVerification = ({
         setRidestart(false);
         setnewride(false);
         setbasic(false);
+        setRideup(true);
         const response = await axios.post("http://localhost:4000/start/ride",{ridedata});
       } else {
         setError("❌ Invalid OTP. Please try again.");

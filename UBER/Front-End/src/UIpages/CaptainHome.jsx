@@ -11,6 +11,8 @@ import axios from 'axios';
 import { SocketContext } from '../context/SocketContext';
 import { CaptainDatacontext } from '../context/CaptainContext';
 import GeoMap from "../Components/MapComponent";
+import Captionridedown from '../UIpages/Ridestart';
+import Logout from '../Components/logout';
 
 const CaptainHome = () => {
 
@@ -27,6 +29,10 @@ const CaptainHome = () => {
   const basicref = useRef(null)
   const [otpdata, setotpdata] = useState({})
   const [basic, setbasic] = useState(true)
+  const [Rideup, setRideup] = useState(false);
+  const Rideupref = useRef(null);
+  const [logout, setlogout] = useState(false);
+  const logoutref = useRef(null)
 
   const { socket } = useContext(SocketContext);
   const { value, setvalue } = useContext(CaptainDatacontext)
@@ -42,7 +48,7 @@ const CaptainHome = () => {
 
         if (res.status === 200) {
           let data = res.data;
-          setvalue({ ...value, id: data._id });
+          setvalue({ ...value, id: data._id ,captionname: `${data.fullname.Firstname} ${data.fullname.Lastname}` });
         }
 
       } catch (err) {
@@ -107,6 +113,44 @@ const CaptainHome = () => {
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
+      if (Rideup) {
+        gsap.to(Rideupref.current, {
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+      } else {
+        gsap.to(Rideupref.current, {
+          y: "200%",
+          duration: 0.6,
+          ease: "power3.in",
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, [Rideup, Rideupref]);
+
+    useGSAP(() => {
+    const ctx = gsap.context(() => {
+      if (logout) {
+        gsap.to(logoutref.current, {
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+      } else {
+        gsap.to(logoutref.current, {
+          y: "-200%",
+          duration: 0.6,
+          ease: "power3.in",
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, [logout, logoutref]);
+
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
       if (newride) {
         gsap.to(Newrideref.current, {
           y: 0,
@@ -124,7 +168,7 @@ const CaptainHome = () => {
     return () => ctx.revert();
   }, [newride, Newrideref]);
 
-    useGSAP(() => {
+  useGSAP(() => {
     const ctx = gsap.context(() => {
       if (basic) {
         gsap.to(basicref.current, {
@@ -169,7 +213,9 @@ const CaptainHome = () => {
 
       {/* Floating profile button */}
       <div className="fixed top-5 right-5 z-30 h-10 w-10 flex justify-center items-center rounded-full bg-white shadow-md hover:scale-105 transition-transform duration-300">
-        <i className="ri-user-settings-fill text-xl text-gray-700"></i>
+        <i
+        onClick={() => setlogout(true)}
+         className="ri-user-settings-fill text-xl text-gray-700"></i>
       </div>
 
       {/* Logo */}
@@ -187,7 +233,7 @@ const CaptainHome = () => {
       {/* Bottom Info Card */}
       <div ref={basicref} className="fixed bottom-0 w-full bg-white rounded-t-2xl shadow-lg p-5 md:p-8 z-20">
         <div className="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6">
-          <h1 className="text-xl md:text-2xl font-bold">Harsh Patel</h1>
+          <h1 className="text-xl md:text-2xl font-bold">{value.captionname}</h1>
           <div className="text-center">
             <h1 className="text-sm font-medium text-gray-500">Earning</h1>
             <h1 className="font-bold text-lg md:text-xl">₹123.99</h1>
@@ -222,15 +268,31 @@ const CaptainHome = () => {
         ref={Otpref}
         className="fixed bottom-0 left-0 w-full z-30 bg-white rounded-t-2xl translate-y-full transition-transform duration-500 shadow-xl"
       >
-        {OTP  && <OTPVerification setbasic={setbasic} ridedata={ridedata} setOTP={setOTP} setRidestart={setRidestart} setnewride={setnewride} otpdata={otpdata} />}
+        {OTP && <OTPVerification setRideup={setRideup} setbasic={setbasic} ridedata={ridedata} setOTP={setOTP} setRidestart={setRidestart} setnewride={setnewride} otpdata={otpdata} />}
       </div>
 
       <div
         ref={Ridestartref}
         className="fixed bottom-0 left-0 w-full z-30 bg-white rounded-t-2xl translate-y-full transition-transform duration-500 shadow-xl"
       >
-        {Ridestart &&<Rideconfirm ridedata={ridedata} setOTP={setOTP} setRidestart={setRidestart} />}
+        {Ridestart && <Rideconfirm ridedata={ridedata} setOTP={setOTP} setRidestart={setRidestart} />}
       </div>
+      <div
+        ref={Rideupref}
+        className="fixed bottom-0 left-0 w-full z-30 bg-white rounded-t-2xl translate-y-full transition-transform duration-500 shadow-xl"
+      >
+        {Rideup && <Captionridedown setnewride={setnewride} setRidestart={setRidestart} setRideup={setRideup} setotp={setOTP} setbasic={setbasic} ride={ridedata} />}
+      </div>
+            <div
+        ref={logoutref}
+        className="fixed w-full h-[9rem] z-40  bg-white rounded-br-3xl rounded-bl-3xl flex flex-col items-center justify-center translate-y-[-100%]"
+      >
+        <Logout />
+        <i
+        onClick={()=>{setlogout(false)}}
+         className="ri-arrow-up-wide-line text-2xl"></i>
+      </div>
+
     </div>
   )
 }
