@@ -12,6 +12,7 @@ const CaptainContext = ({ children }) => {
   };
 
   const [value,setvalue ]= useState({
+    who:'',
     id:'',
     captionname: '',
     captain,

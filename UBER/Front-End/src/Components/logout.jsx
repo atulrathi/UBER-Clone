@@ -1,17 +1,27 @@
-import React from "react";
+import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
+import { CaptainDatacontext } from '../context/CaptainContext';
+import { UserDataContext } from "../context/userContext";
 
 const UserProfile = () => {
   // Temporary user data
-  const userName = "Atul Rathi";
+  const navigate = useNavigate();
+  const { value } = useContext(CaptainDatacontext);
+  const { user } = useContext(UserDataContext);
+  const userName = value.captionname || user.fullname.Firstname+" "+user.fullname.Lastname || "Captain User";
 
   // Extract first letter for profile icon
   const firstLetter = userName.charAt(0).toUpperCase();
 
   const handleLogout = () => {
-    alert("You have been logged out successfully!");
-    // Later replace with actual logout logic
-    // localStorage.removeItem("token");
-    // window.location.href = "/login";
+    if(value.who==='caption'){
+          alert("You have been logged out successfully!");
+    navigate("/caption-home/logout");
+    }else{
+      alert("You have been logged out successfully!");
+      navigate("/Home/logout");
+    }
+
   };
 
   return (
@@ -26,7 +36,6 @@ const UserProfile = () => {
         {/* User Info */}
         <div>
           <h2 className="text-lg font-semibold text-gray-800">{userName}</h2>
-          <p className="text-sm text-gray-500">Ready for your next ride?</p>
         </div>
       </div>
 

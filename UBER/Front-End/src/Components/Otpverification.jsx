@@ -99,7 +99,6 @@ const OTPVerification = ({
   };
 
   const submit = async () => {
-    // ✅ Read live values directly from inputs (ensures latest digit is included)
     const liveValues = inputsRef.current.map((input) => input?.value || "");
     const code = liveValues.join("");
 

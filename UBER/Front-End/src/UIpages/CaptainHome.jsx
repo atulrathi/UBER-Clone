@@ -48,7 +48,7 @@ const CaptainHome = () => {
 
         if (res.status === 200) {
           let data = res.data;
-          setvalue({ ...value, id: data._id ,captionname: `${data.fullname.Firstname} ${data.fullname.Lastname}` });
+          setvalue({ ...value, id: data._id ,captionname: `${data.fullname.Firstname} ${data.fullname.Lastname}`,who:'caption' });
         }
 
       } catch (err) {
@@ -285,7 +285,7 @@ const CaptainHome = () => {
       </div>
             <div
         ref={logoutref}
-        className="fixed w-full h-[9rem] z-40  bg-white rounded-br-3xl rounded-bl-3xl flex flex-col items-center justify-center translate-y-[-100%]"
+        className="fixed w-full h-[8rem] z-40  bg-white rounded-br-3xl rounded-bl-3xl flex flex-col items-center justify-center translate-y-[-100%]"
       >
         <Logout />
         <i

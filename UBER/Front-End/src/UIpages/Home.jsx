@@ -16,6 +16,7 @@ import Loader from "../Components/Lodercomponent";
 import Lowinternet from "../Components/lowinternet";
 import { UserDataContext } from "../context/userContext";
 import { SocketContext } from "../context/SocketContext";
+import Logout from '../Components/logout';
 
 const Home = () => {
   const [pickup, setpickup] = useState("");
@@ -30,6 +31,7 @@ const Home = () => {
   const [captiondata, setcaptiondata] = useState({});
   const [otp, setotp] = useState("");
   const [Ridestart, setRidestart] = useState(false);
+  const [logout, setlogout] = useState(false);
 
   const panelref = useRef(null);
   const downerrow = useRef(null);
@@ -40,6 +42,9 @@ const Home = () => {
   const driverref = useRef(null);
   const otpref = useRef(null);
   const RideStartref = useRef(null);
+  const logoutref = useRef(null);
+  const logiconref = useRef(null);
+  const mapref = useRef(null);
 
   const { user, setuser } = useContext(UserDataContext);
   let userid = user.id;
@@ -54,7 +59,7 @@ const Home = () => {
         });
         if (res.status === 200) {
           let data = res.data;
-          setuser({ ...user, id: data._id, fullname: data.fullname });
+          setuser({ ...user, id: data._id, fullname: data.fullname, who: 'user' });
         }
       } catch (err) {
         console.error("❌ Error fetching user:", err);
@@ -78,12 +83,12 @@ const Home = () => {
     };
   }, [socket]);
 
-    useEffect(() => {
+  useEffect(() => {
     if (!socket) return;
     const ridestarte = (data) => {
       console.log("Ride started data received in User:", data);
-    setRidestart(true);
-    setotp(false);
+      setRidestart(true);
+      setotp(false);
     };
     socket.on("RIDE_STARTED", ridestarte);
     return () => {
@@ -91,7 +96,7 @@ const Home = () => {
     };
   }, [socket]);
 
-      useEffect(() => {
+  useEffect(() => {
     if (!socket) return;
     const ridecomplete = (data) => {
       setisup(false);
@@ -151,6 +156,12 @@ const Home = () => {
           duration: 0.5,
           delay: 0.2,
         });
+        gsap.to(logiconref.current, {
+          zIndex: 10,
+        });
+        gsap.to(mapref.current, {
+          height: "100%",
+        });
       } else {
         gsap.to(panelref.current, {
           height: "0",
@@ -159,6 +170,12 @@ const Home = () => {
         });
         gsap.to(downerrow.current, { opacity: 0, duration: 0.3 });
         gsap.to(panelref.current.children, { opacity: 0, duration: 0.2 });
+        gsap.to(logiconref.current, {
+          zIndex: 21,
+        });
+        gsap.to(mapref.current, {
+          height: "9rem",
+        });
       }
     });
     return () => ctx.revert();
@@ -240,24 +257,30 @@ const Home = () => {
     return () => ctx.revert();
   }, [otp, otpref]);
 
-useGSAP(() => {
-  const ctx = gsap.context(() => {
-    if (Ridestart) {
-      gsap.to(RideStartref.current, {
-        y: 0,
-        duration: 0.6,
-        ease: "power3.out",
-      });
-    } else {
-      gsap.to(RideStartref.current, {
-        y: "200%",
-        duration: 0.6,
-        ease: "power3.in",
-      });
-    }
-  });
-  return () => ctx.revert();
-}, [Ridestart,RideStartref]);
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
+      if (Ridestart) {
+        gsap.to(RideStartref.current, {
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+         gsap.to(logiconref.current, {
+          zIndex: 0,
+        });
+      } else {
+        gsap.to(RideStartref.current, {
+          y: "200%",
+          duration: 0.6,
+          ease: "power3.in",
+        });
+         gsap.to(logiconref.current, {
+          zIndex: 21,
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, [Ridestart, RideStartref]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -277,6 +300,31 @@ useGSAP(() => {
     });
     return () => ctx.revert();
   }, [Payment, Paymentref]);
+
+  useGSAP(() => {
+    const ctx = gsap.context(() => {
+      if (logout) {
+        gsap.to(logoutref.current, {
+          y: 0,
+          duration: 0.6,
+          ease: "power3.out",
+        });
+        gsap.to(logiconref.current, {
+          zIndex: 10,
+        });
+      } else {
+        gsap.to(logoutref.current, {
+          y: "-200%",
+          duration: 0.6,
+          ease: "power3.in",
+        });
+        gsap.to(logiconref.current, {
+          zIndex: 21,
+        });
+      }
+    });
+    return () => ctx.revert();
+  }, [logout, logoutref, logiconref]);
 
   useGSAP(() => {
     const ctx = gsap.context(() => {
@@ -309,15 +357,21 @@ useGSAP(() => {
         alt="Uber Logo"
       />
 
+      <div ref={logiconref} className="fixed top-5 right-5 z-21 h-10 w-10 flex justify-center items-center rounded-full bg-white shadow-md hover:scale-105 transition-transform duration-300">
+        <i
+          onClick={() => setlogout(true)}
+          className="ri-user-settings-fill text-xl text-gray-700"></i>
+      </div>
+
       {/* ✅ Responsive Map Fix */}
-{/* Background Map/Gif */}
-<div className="absolute inset-0 z-19 w-screen h-screen min-h-screen">
-  <GeoMap pickup={pickup} destination={destination} />
-</div>
+      {/* Background Map/Gif */}
+      <div className="absolute inset-0 z-19 w-screen h-screen min-h-screen">
+        <GeoMap pickup={pickup} destination={destination} />
+      </div>
 
       {/* Bottom Panels */}
-      <div className="fixed bottom-0 w-full h-full flex flex-col justify-end z-20">
-        <div className="p-5 bg-white rounded-tr-2xl rounded-tl-2xl shadow-lg">
+      <div ref={mapref} className="fixed bottom-0 w-full h-[9rem] flex flex-col justify-end z-20">
+        <div className="p-5 bg-white rounded-tr-2xl rounded-tl-2xl ">
           <h4
             ref={downerrow}
             onClick={() => setisup(false)}
@@ -350,11 +404,10 @@ useGSAP(() => {
             <div className="flex w-full justify-end">
               <button
                 disabled={!(pickup?.length >= 3 && destination?.length >= 3)}
-                className={`px-3 py-1 ml-auto mt-3 rounded-xl transition ${
-                  pickup?.length >= 3 && destination?.length >= 3
-                    ? "bg-green-400 cursor-pointer"
-                    : "bg-gray-300 cursor-not-allowed"
-                }`}
+                className={`px-3 py-1 ml-auto mt-3 rounded-xl transition ${pickup?.length >= 3 && destination?.length >= 3
+                  ? "bg-green-400 cursor-pointer"
+                  : "bg-gray-300 cursor-not-allowed"
+                  }`}
               >
                 Find Ride
               </button>
@@ -457,7 +510,17 @@ useGSAP(() => {
           ref={RideStartref}
           className="fixed top-0 h-screen left-0 w-full flex flex-col  translate-y-[200%] gap-10 z-30 bg-white rounded-t-2xl"
         >
-         <RideDetails captiondata={captiondata} pickup={pickup} destination={destination} />
+          <RideDetails captiondata={captiondata} pickup={pickup} destination={destination} />
+        </div>
+
+        <div
+          ref={logoutref}
+          className="fixed w-full h-[8rem] z-22 top-0  bg-white rounded-br-3xl rounded-bl-3xl flex flex-col items-center justify-center translate-y-[-100%] "
+        >
+          {logout && <Logout />}
+          <i
+            onClick={() => { setlogout(false) }}
+            className="ri-arrow-up-wide-line text-2xl"></i>
         </div>
       </div>
     </div>
