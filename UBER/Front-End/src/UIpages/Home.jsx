@@ -72,7 +72,6 @@ const Home = () => {
   useEffect(() => {
     if (!socket) return;
     const handleRideAccepted = (data) => {
-      console.log("✅ Ride Accepted Data:", data);
       setWating(false);
       setDriver(true);
       setcaptiondata(data);
@@ -86,7 +85,6 @@ const Home = () => {
   useEffect(() => {
     if (!socket) return;
     const ridestarte = (data) => {
-      console.log("Ride started data received in User:", data);
       setRidestart(true);
       setotp(false);
     };

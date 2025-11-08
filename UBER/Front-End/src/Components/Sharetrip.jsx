@@ -28,7 +28,6 @@ const Sharetrip = ({
         setWating(false);
         setVehiclepannel(false);
         setotp(true);
-        console.log("OTP generated:", data.otp);
       }
     });
   }

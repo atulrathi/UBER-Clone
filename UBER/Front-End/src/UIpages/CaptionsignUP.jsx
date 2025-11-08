@@ -33,7 +33,6 @@ const [email, setEmail] = useState('');
     if(newuser.status == 201){
       const data = newuser.data;
       localStorage.setItem('caption',data.token);
-      console.log(data);
        Nevigate('/vehicle-info');
     }
    }

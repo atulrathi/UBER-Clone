@@ -77,7 +77,6 @@ const CaptainHome = () => {
   useEffect(() => {
     socket.on("otp-generated", (data) => {
       setotpdata(data);
-      console.log("📩 OTP received from backend:", data.otp);
     });
 
     return () => {
@@ -89,7 +88,6 @@ const CaptainHome = () => {
   socket.on('rideRequest', (data) => {
     setnewride(true);
     setridedata(data);
-    console.log('Ride request received:', data);
   });
 
   useGSAP(() => {

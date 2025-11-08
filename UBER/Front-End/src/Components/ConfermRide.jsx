@@ -20,7 +20,6 @@ const Vehicledetail = (props) => {
       fare: vehicle.fare,
     });
     rideDetails.then((res)=>{
-      console.log(res.data);
     }).catch((err)=>{
       console.log(err);
     });
