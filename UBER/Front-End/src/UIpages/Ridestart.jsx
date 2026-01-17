@@ -1,7 +1,7 @@
 import React, { useRef, useState, useContext, useEffect } from "react";
 import Captionridedown from "../Components/Captionridedown";
 import GeoMap from "../Components/MapComponent";
-import { useGSAP } from "@GSAP/react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { SocketContext } from "../context/SocketContext";
 

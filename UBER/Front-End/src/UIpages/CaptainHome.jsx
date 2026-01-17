@@ -1,7 +1,7 @@
 import React, { useContext, useRef, useState, useEffect } from 'react'
 import Newride from '../Components/Newride'
 import OTPVerification from '../Components/Otpverification'
-import { useGSAP } from "@GSAP/react";
+import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import Rideconfirm from '../Components/Rideconfirm'
 import Captiondetails from '../Components/Captiondetails'
