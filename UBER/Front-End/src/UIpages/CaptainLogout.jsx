@@ -26,7 +26,7 @@ const Logout = () => {
           localStorage.removeItem("caption");
           value.captionname='';
           navigate("/caption-Login");
-        }
+        }  
       } catch (err) {
         console.error("Logout failed:", err.response?.data || err.message);
         // still clear token on client side
