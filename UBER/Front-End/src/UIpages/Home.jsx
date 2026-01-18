@@ -51,7 +51,6 @@ const Home = () => {
   const { socket } = useContext(SocketContext);
 
   useEffect(() => {
-    window.location.reload();
     const token = localStorage.getItem("ridertoken");
     async function fetchUser() {
       try {
@@ -60,7 +59,7 @@ const Home = () => {
         });
         if (res.status === 200) {
           let data = res.data;
-          setuser({ ...user, id: data._id, fullname: data.fullname, who: 'user' });
+          setuser({ id: data._id, fullname: data.fullname, who: 'user' });
         }
       } catch (err) {
         console.error("❌ Error fetching user:", err);
