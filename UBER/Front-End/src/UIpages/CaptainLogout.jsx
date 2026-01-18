@@ -1,9 +1,12 @@
-import React, { useEffect } from "react";
+import React, { useEffect ,useContext} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { CaptainDatacontext } from '../Components/logout';;
 
 const Logout = () => {
   const navigate = useNavigate();
+
+  const { value } = useContext(CaptainDatacontext);
 
   useEffect(() => {
     const token = localStorage.getItem("captainToken");
@@ -21,6 +24,7 @@ const Logout = () => {
 
         if (res.status === 200) {
           localStorage.removeItem("caption");
+          value.captionname='';
           navigate("/caption-Login");
         }
       } catch (err) {
