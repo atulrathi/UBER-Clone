@@ -49,7 +49,7 @@ const Userlogin = () => {
         </div>
         <img
           className="z-9 w-[6rem] ml-[0rem] mt-[1rem] mb-6"
-          src="./public/uber-logo.png"
+          src="/uber-logo.png"
           alt=""
         />
         <div className="w-full flex justify-center mb-4">
