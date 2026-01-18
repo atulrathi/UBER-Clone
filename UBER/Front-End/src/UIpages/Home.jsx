@@ -51,6 +51,7 @@ const Home = () => {
   const { socket } = useContext(SocketContext);
 
   useEffect(() => {
+    window.location.reload();
     const token = localStorage.getItem("ridertoken");
     async function fetchUser() {
       try {
