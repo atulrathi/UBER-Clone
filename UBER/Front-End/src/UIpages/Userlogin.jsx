@@ -20,7 +20,11 @@ const Userlogin = () => {
       email: email,
       password: password
     };
-    const response = await axios.post("https://uber-clone-t911.onrender.com/createuser/login", UserData);
+    const response = await axios.post("https://uber-clone-t911.onrender.com/createuser/login", UserData)
+    .catch((error) => {
+      console.log(error);
+      alert("Invalid Credentials, Please try again");
+    });
     if (response.status === 200) {
       const data = response.data;
       setuser(data.user._id);
