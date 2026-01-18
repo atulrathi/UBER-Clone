@@ -7,7 +7,7 @@ const Proctedwraper = ({ children }) => {
     const tokne = localStorage.getItem("ridertoken");
   useEffect(() => {
     if (!tokne) {
-      navigate("/caption-Login");
+      navigate("/user-Login");
     }
   }, [navigate, tokne]);
 
