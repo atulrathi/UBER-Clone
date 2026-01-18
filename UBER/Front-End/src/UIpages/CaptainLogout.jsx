@@ -1,7 +1,7 @@
 import React, { useEffect ,useContext} from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { CaptainDatacontext } from '../Components/logout';;
+import { CaptainDatacontext } from '../context/CaptainContext';;
 
 const Logout = () => {
   const navigate = useNavigate();
