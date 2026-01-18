@@ -14,6 +14,7 @@ import Captainproctedwraper from './UIpages/Captainproctedwraper'
 import CaptanLogout from './UIpages/CaptainLogout'
 import Ridestart from './UIpages/Ridestart'
 import Share from './Components/Sharetrip'
+import Proctedlogin from "./UIpages/proctedlogin"
 
 const App = () => {
   return (
@@ -23,7 +24,7 @@ const App = () => {
         <Route path='/caption-Signup' element={<Captionsignup />} />
         <Route path='/vehicle-info' element={<Vehicleinfo />} />
         <Route path='/caption-Login' element={<CaptionLogin />} />
-        <Route path='/user-Login' element={<Userlogin />} />
+        <Route path='/user-Login' element={<Proctedlogin><Userlogin /></Proctedlogin>} />
         <Route path='/user-Signup' element={<Usersignup />} />
         <Route path='/Home' element={<Proctedwraper>
           <Home />
