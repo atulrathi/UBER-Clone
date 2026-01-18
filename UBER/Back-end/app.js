@@ -18,7 +18,7 @@ const ride = require('./Router/ride-start');
 app.use(cookieParser());
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://uber-eight-ashen.vercel.app",
     methods: ["GET", "POST", "PUT", "DELETE"],
     credentials: true,
   })
@@ -26,6 +26,10 @@ app.use(
 
 app.use(express.json());
 app.use(express.urlencoded({extended:true}));
+
+app.get("/",(req,res)=>{
+    res.send("UBER BACK-END IS RUNNING");
+});
 
 app.use("/createuser",userRoutes);
 app.use("/caption",captionRoutes);

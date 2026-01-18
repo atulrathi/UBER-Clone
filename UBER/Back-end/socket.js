@@ -14,7 +14,6 @@ function initializeSocket(server) {
   });
 
   io.on('connection', (socket) => {
-    console.log('🟢 Client connected:', socket.id);
 
     // USER OR CAPTION JOINS
     socket.on('join', async (data) => {
