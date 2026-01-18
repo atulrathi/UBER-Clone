@@ -20,10 +20,10 @@ const App = () => {
   return (
     <div >
       <Routes>
-        <Route path='/' element={<Welcome/>} />
+        <Route path='/' element={<Proctedlogin><Welcome /></Proctedlogin>} />
         <Route path='/caption-Signup' element={<Captionsignup />} />
         <Route path='/vehicle-info' element={<Vehicleinfo />} />
-        <Route path='/caption-Login' element={<CaptionLogin />} />
+        <Route path='/caption-Login' element={<Proctedlogin><CaptionLogin /></Proctedlogin>} />
         <Route path='/user-Login' element={<Proctedlogin><Userlogin /></Proctedlogin>} />
         <Route path='/user-Signup' element={<Usersignup />} />
         <Route path='/Home' element={<Proctedwraper>
