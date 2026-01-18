@@ -351,7 +351,7 @@ const Home = () => {
       {/* Uber Logo */}
       <img
         className="fixed z-20 w-24 md:w-32 top-5 left-5"
-        src="./public/uber-logo.png"
+        src="/uber-logo.png"
         alt="Uber Logo"
       />
 

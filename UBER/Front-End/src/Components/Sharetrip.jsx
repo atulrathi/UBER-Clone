@@ -43,7 +43,7 @@ const Sharetrip = ({
   const selectedVehicle = user.selectedVehicle || {
     fare: 0,
     name: "Uber Go",
-    image: "./public/ubercar.png",
+    image: "/ubercar.png",
   };
 
   return (

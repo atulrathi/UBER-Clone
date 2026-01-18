@@ -53,7 +53,7 @@ const Userlogin = () => {
           alt=""
         />
         <div className="w-full flex justify-center mb-4">
-          <h1 className="text-3xl font-semibold">Caption ID</h1>
+          <h1 className="text-3xl font-semibold">Captain ID</h1>
         </div>
         <h1 className="text-base mb-2 font-sans">Enter You'r Email ?</h1>
         <input
@@ -97,23 +97,23 @@ const Userlogin = () => {
       <div className="w-full flex justify-center items-center mt-1 gap-4">
         <img
           className="h-7 w-7 object-fit"
-          src="./public/google.webp"
+          src="/google.webp"
           alt="Gmail"
         />
         <img
           className="h-10 w-10 object-fit"
-          src="./public/apple.webp"
+          src="/apple.webp"
           alt="Apple ID"
         />
         <img
           className="h-7 w-7 object-fit"
-          src="./public/twitter.png"
+          src="/twitter.png"
           alt="Twitter ID"
         />
       </div>
       <div className="w-full flex justify-center mt-[4rem]">
         <Link to="/caption-Signup">
-          First time here? <strong>Become a Caption.</strong>
+          First time here? <strong>Become a Captain.</strong>
         </Link>
       </div>
       <div></div>

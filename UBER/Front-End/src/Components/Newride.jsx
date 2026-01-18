@@ -7,7 +7,7 @@ const socket = io("https://uber-clone-t911.onrender.com");
 
 const Riderequest = (props) => {
   const { user } = useContext(UserDataContext);
-  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const vehicle = user.selectedVehicle || { image: "/ubercar.png", fare: 0, name: "Uber Go" };
   const { value, setvalue } = useContext(CaptainDatacontext);
 
   function rideaccept() {

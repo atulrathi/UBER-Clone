@@ -17,7 +17,7 @@ import Logout from '../Components/logout';
 const CaptainHome = () => {
 
   const { user } = useContext(UserDataContext);
-  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const vehicle = user.selectedVehicle || { image: "/ubercar.png", fare: 0, name: "Uber Go" };
 
   const [OTP, setOTP] = useState(false)
   const [newride, setnewride] = useState(false)
@@ -219,7 +219,7 @@ const CaptainHome = () => {
       {/* Logo */}
       <img
         className="fixed z-20 w-24 md:w-32 top-5 left-5"
-        src="./public/uber-logo.png"
+        src="/uber-logo.png"
         alt="Uber Logo"
       />
 

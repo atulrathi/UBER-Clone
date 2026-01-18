@@ -47,11 +47,11 @@ const SelectVehicle = (props) => {
               time: "2 mins away",
               desc: "Affordable, compact rides",
               fare: user.fare.car,
-              image: "./public/ubercar.png",
+              image: "/ubercar.png",
             })
           }
         >
-          <img src="./public/ubercar.png" alt="Uber Go" className="h-14" />
+          <img src="/ubercar.png" alt="Uber Go" className="h-14" />
           <div className="flex-1 px-4">
             <h4 className="font-medium text-base">
               Uber Go <span className="text-gray-500 ml-1"><i className="ri-user-3-fill"></i>4</span>
@@ -75,11 +75,11 @@ const SelectVehicle = (props) => {
               time: "2 mins away",
               desc: "Cheaper, faster bike rides",
               fare: user.fare.bike,
-              image: "./public/uberbike.webp",
+              image: "/uberbike.webp",
             })
           }
         >
-          <img src="./public/uberbike.webp" alt="Uber Bike" className="h-14" />
+          <img src="/uberbike.webp" alt="Uber Bike" className="h-14" />
           <div className="flex-1 px-4">
             <h4 className="font-medium text-base">
               Uber Bike <span className="text-gray-500 ml-1"><i className="ri-user-3-fill"></i>1</span>
@@ -103,11 +103,11 @@ const SelectVehicle = (props) => {
               time: "3 mins away",
               desc: "Easy auto rides",
               fare: user.fare.auto,
-              image: "./public/uberauto.png",
+              image: "/uberauto.png",
             })
           }
         >
-          <img src="./public/uberauto.png" alt="Uber Auto" className="h-14" />
+          <img src="/uberauto.png" alt="Uber Auto" className="h-14" />
           <div className="flex-1 px-4">
             <h4 className="font-medium text-base">
               Uber Auto <span className="text-gray-500 ml-1"><i className="ri-user-3-fill"></i>1</span>

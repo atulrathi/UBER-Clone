@@ -4,7 +4,7 @@ import axios from "axios";
 
 const Vehicledetail = (props) => {
   const { user } = useContext(UserDataContext);
-  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const vehicle = user.selectedVehicle || { image: "/ubercar.png", fare: 0, name: "Uber Go" };
 
   function confermride(){
     props.setWating(true);

@@ -5,7 +5,7 @@ import { UserDataContext } from "../context/userContext";
 const WaitingDriver = (props) => {
 
   const {user} = useContext(UserDataContext);
-  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const vehicle = user.selectedVehicle || { image: "/ubercar.png", fare: 0, name: "Uber Go" };
 
   useEffect(() => {
     const tl = gsap.timeline({ repeat: -1 });

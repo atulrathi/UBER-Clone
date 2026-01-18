@@ -38,7 +38,7 @@ const Userlogin = () => {
       </div>
         <img
           className="z-9 w-[6rem] ml-[0rem] mt-[1rem] mb-6"
-          src="./public/uber-logo.png"
+          src="/uber-logo.png"
           alt=""
         />
         <div className="w-full flex justify-center mb-4">
@@ -81,9 +81,9 @@ const Userlogin = () => {
         <h1>Login with</h1>
       </div>
       <div className="w-full flex justify-center items-center mt-1 gap-4">
-        <img className="h-7 w-7 object-fit" src="./public/google.webp" alt="Gmail" />
-        <img className="h-10 w-10 object-fit" src="./public/apple.webp" alt="Apple ID" />
-        <img className="h-7 w-7 object-fit" src="./public/twitter.png" alt="Twitter ID" />
+        <img className="h-7 w-7 object-fit" src="/google.webp" alt="Gmail" />
+        <img className="h-10 w-10 object-fit" src="/apple.webp" alt="Apple ID" />
+        <img className="h-7 w-7 object-fit" src="/twitter.png" alt="Twitter ID" />
       </div>
       <div className="w-full flex justify-center mt-[4rem]">
         <Link to="/user-Signup">Don't have a Account ? <strong>SignUp</strong></Link>

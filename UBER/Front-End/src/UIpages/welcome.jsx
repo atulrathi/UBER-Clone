@@ -6,10 +6,10 @@ const Home = () => {
   return (
     <div className='h-screen  w-screen overflow-hidden '>
       <div className=' mt-0  flex flex-col w-full pt-8 flex justify-between flex-col '>
-        <img className='z-9 w-[9rem] ml-[3rem] mt-[2rem]' src="./public/uber-logo.png" alt="" />
+        <img className='z-9 w-[9rem] ml-[3rem] mt-[2rem]' src="/uber-logo.png" alt="" />
         <div  className="h-full flex items-center justify-center w-full overflow-hidden mt-[5rem]">
  <video  className=' rounded-lg ' loop autoPlay muted controlsList='nodownload noremoteplayback noplaybackrate' disablePictureInPicture>
-      <source src='./public/car.mp4' className='' type='video/mp4' />
+      <source src='/car.mp4' className='' type='video/mp4' />
       you browser not support video
       </video>
         </div>

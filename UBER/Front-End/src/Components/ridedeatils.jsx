@@ -4,7 +4,7 @@ import { UserDataContext } from "../context/userContext";
 
 const RideDetails = ({ pickup, destination, captiondata }) => {
   const { user, setuser } = useContext(UserDataContext);
-  const vehicle = user.selectedVehicle || { image: "./public/ubercar.png", fare: 0, name: "Uber Go" };
+  const vehicle = user.selectedVehicle || { image: "/ubercar.png", fare: 0, name: "Uber Go" };
   const driver = captiondata?.captionname || {};
   const vehicledetails = captiondata?.captionvehicle || {};
   const driverFullName =
