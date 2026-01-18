@@ -1,124 +1,236 @@
 import React, { useState } from "react";
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { UserDataContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { ArrowLeft, Mail, Lock, User, Shield } from "lucide-react";
 
-const Userlogin = () => {
-const [email, setEmail] = useState('');
+const CaptainSignup = () => {
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [Firstname, setFirstName] = useState('');
-  const [Lastname, setLastname] = useState('')
+  const [Lastname, setLastname] = useState('');
   const [confirmPassword, setconfirmPassword] = useState('');
-  const Nevigate=useNavigate();
+  const Nevigate = useNavigate();
 
-  const submitHandler =async (e)=>{
+  const submitHandler = async (e) => {
     e.preventDefault();
-    const userdata={
-      fullname:{
-        Firstname:Firstname,
-        Lastname:Lastname
+    const userdata = {
+      fullname: {
+        Firstname: Firstname,
+        Lastname: Lastname
       },
-      email:email,
-      password:password
+      email: email,
+      password: password
     }
 
-    const newuser = await axios.post("https://uber-clone-t911.onrender.com/caption/register",userdata)
-    .catch((err)=>{
-      console.log(err);
-      Nevigate('/caption-Login');
-      alert("User Already Exists,please Login");
-    });
+    const newuser = await axios.post("https://uber-clone-t911.onrender.com/caption/register", userdata)
+      .catch((err) => {
+        console.log(err);
+        Nevigate('/caption-Login');
+        alert("User Already Exists,please Login");
+      });
 
-    if(newuser.status == 201){
+    if (newuser.status == 201) {
       const data = newuser.data;
-      localStorage.setItem('caption',data.token);
-       Nevigate('/vehicle-info');
+      localStorage.setItem('caption', data.token);
+      Nevigate('/vehicle-info');
     }
-   }
+  }
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
 
   return (
-    <div>
-      <form onSubmit={(e)=>{submitHandler(e)}} className="p-7  ">
-        <div className="w-full ">
-                <Link to='/caption-Login' className="text-lg "><strong>Back</strong></Link>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex flex-col">
+      {/* Header */}
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="px-6 pt-6"
+      >
+        <Link
+          to="/caption-Login"
+          className="inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 transition-colors duration-200"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-medium">Back</span>
+        </Link>
+      </motion.header>
+
+      {/* Main Content */}
+      <motion.main
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex-1 flex flex-col px-6 pt-6 pb-8 max-w-md mx-auto w-full"
+      >
+        {/* Title Section */}
+        <motion.div variants={itemVariants} className="mb-6 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-black to-slate-800 shadow-lg mb-4">
+            <Shield className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-1">
+            Sign Up
+          </h1>
+          <p className="text-slate-600 text-sm">
+            Create your captain account
+          </p>
+        </motion.div>
+
+        {/* Signup Form */}
+        <motion.form
+          variants={itemVariants}
+          onSubmit={(e) => {
+            submitHandler(e);
+          }}
+          className="space-y-4"
+        >
+          {/* Name Fields */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Full Name
+            </label>
+            <div className="flex gap-3">
+              <div className="relative flex-1">
+                <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={Firstname}
+                  onChange={(e) => {
+                    setFirstName(e.target.value)
+                  }}
+                  className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                  type="text"
+                  required
+                  placeholder="First Name"
+                />
               </div>
-       <div className="w-full flex justify-center text-xl font-semibold">
-        <h1>Sign UP</h1>
-       </div>
-        
-        <h1 className="text-base mb-2 font-sans">Enter You'r Name </h1>
-        <div className="flex w-full gap-2 ">
-          <input
-        value={Firstname}
-        onChange={(e)=>{
-          setFirstName(e.target.value)
-        }}
-          className="bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base mb-2 outline-none"
-          type="text"
-          required
-          placeholder="First Name"
-        />
-         <input
-        value={Lastname}
-        onChange={(e)=>{
-          setLastname(e.target.value)
-        }}
-          className="bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base mb-2 outline-none"
-          type="text"
-          required
-          placeholder="Last Name"
-        />
-        </div>
-        <h1 className="text-base mb-2 font-sans">Enter You'r Email </h1>
-         <input
-        value={email}
-        onChange={(e)=>{
-          setEmail(e.target.value)
-        }}
-          className="bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base mb-2 outline-none"
-          type="email"
-          required
-          placeholder="Email"
-        />
-        
-        <h1 className="font-sans text-base mb-2">Create You'r Password</h1>
-        <input
-        value={password}
-        onChange={(e)=>{
-          setPassword(e.target.value)
-        }}
-          className="outline-none mb-4 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-          type="password"
-          placeholder="Password"
-          required 
-        />
-        <h1 className="font-sans text-base mb-2">Confirm Password</h1>
-        <input
-        value={confirmPassword}
-        onChange={(e)=>{
-          setconfirmPassword(e.target.value)
-        }}
-          className="outline-none mb-1 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-          type="password"
-          placeholder="Confirm Password"
-          required
-        />
-        <div className="flex gap-1 mb-6">
-          <h1 className="text-xs">By procceding you consent to get Email's, WhatsApp or SMS message, including by automated means,from UBER and it's affilates to the Email provided</h1>
-        </div>
-        <div className="w-full flex justify-center">
-          <button  className="font-sans bg-[#111] text-white rounded-lg text-xl w-[50%] font-semibold mb-2 rounded py-2 px-1">
-          Next
-        </button>
-        </div>
-        
-      </form>
-      <div className="w-full flex justify-center absolute bottom-3">
-        <h1 className="text-xs"><strong className="underline">Privacy & Policy</strong> and <strong className="underline">Term of service</strong> apply</h1>
-      </div>
+              <input
+                value={Lastname}
+                onChange={(e) => {
+                  setLastname(e.target.value)
+                }}
+                className="flex-1 px-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                type="text"
+                required
+                placeholder="Last Name"
+              />
+            </div>
+          </div>
+
+          {/* Email Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Email Address
+            </label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                value={email}
+                onChange={(e) => {
+                  setEmail(e.target.value)
+                }}
+                className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                type="email"
+                required
+                placeholder="captain@uber.com"
+              />
+            </div>
+          </div>
+
+          {/* Password Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Create Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                value={password}
+                onChange={(e) => {
+                  setPassword(e.target.value)
+                }}
+                className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                type="password"
+                placeholder="Create a strong password"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Confirm Password Field */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Confirm Password
+            </label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                value={confirmPassword}
+                onChange={(e) => {
+                  setconfirmPassword(e.target.value)
+                }}
+                className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                type="password"
+                placeholder="Re-enter your password"
+                required
+              />
+            </div>
+          </div>
+
+          {/* Terms Notice */}
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 mt-4">
+            <p className="text-xs text-slate-600 leading-relaxed">
+              By proceeding you consent to get emails, WhatsApp or SMS messages, including by automated means, from UBER and its affiliates to the email provided.
+            </p>
+          </div>
+
+          {/* Submit Button */}
+          <motion.button
+            type="submit"
+            className="w-full py-3.5 bg-black text-white font-semibold rounded-xl shadow-lg shadow-black/20 hover:bg-slate-900 hover:shadow-xl hover:shadow-black/30 transition-all mt-6"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
+            Next
+          </motion.button>
+        </motion.form>
+
+        {/* Footer */}
+        <motion.div variants={itemVariants} className="mt-auto pt-8">
+          <p className="text-center text-xs text-slate-500">
+            <Link to="/privacy" className="font-semibold text-slate-700 hover:underline underline-offset-2">
+              Privacy Policy
+            </Link>
+            {" "}and{" "}
+            <Link to="/terms" className="font-semibold text-slate-700 hover:underline underline-offset-2">
+              Terms of Service
+            </Link>
+            {" "}apply
+          </p>
+        </motion.div>
+      </motion.main>
     </div>
   );
 };
 
-export default Userlogin;
+export default CaptainSignup;

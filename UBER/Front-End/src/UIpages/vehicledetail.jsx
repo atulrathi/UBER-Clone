@@ -4,8 +4,10 @@ import { UserDataContext } from "../context/userContext";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { CaptainDatacontext } from "../context/CaptainContext";
+import { motion } from "framer-motion";
+import { ArrowLeft, Car, Hash, Palette, Users, Truck } from "lucide-react";
 
-const Userlogin = () => {
+const VehicleInfo = () => {
   const [Numberplate, setNumberplate] = useState("");
   const [Vehiclecolor, setvehiclecolor] = useState("");
   const [Vehiclemodel, setvehiclemodel] = useState("");
@@ -15,8 +17,9 @@ const Userlogin = () => {
   const Nevigate = useNavigate();
 
   const handleChange = (e) => {
-    setVehicletype(e.target.value); // update state when option changes
+    setVehicletype(e.target.value);
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     const captindata = {
@@ -40,117 +43,217 @@ const Userlogin = () => {
       localStorage.removeItem("token");
       Nevigate("/caption-login");
     }
-   
 
     setNumberplate("");
     setvehiclecolor("");
     setvehiclemodel("");
     setvehiclecapacity("");
   };
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.08,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.4, ease: "easeOut" },
+    },
+  };
+
   return (
-    <div>
-      <form
-        onSubmit={(e) => {
-          submitHandler(e);
-        }}
-        className="p-7  "
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 flex flex-col">
+      {/* Header */}
+      <motion.header
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="px-6 pt-6"
       >
-        <div className="w-full ">
-          <Link to="/caption-Signup" className="text-lg ">
-            <strong>Back</strong>
-          </Link>
-        </div>
-        <div className="w-full flex justify-center text-2xl font-semibold mb-6">
-          <h1>Vehicle Detail's</h1>
-        </div>
+        <Link
+          to="/caption-Signup"
+          className="inline-flex items-center gap-2 text-slate-700 hover:text-slate-900 transition-colors duration-200"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          <span className="font-medium">Back</span>
+        </Link>
+      </motion.header>
 
-        <h1 className="text-base mb-2 font-sans"> Vehicle Model </h1>
-        <div className="flex w-full gap-2 mb-3">
-          <input
-            value={Vehiclemodel}
-            onChange={(e) => {
-              setvehiclemodel(e.target.value);
-            }}
-            className="bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base mb-2 outline-none"
-            type="text"
-            required
-            placeholder="Model ex(Maruti Suzuki)"
-          />
-        </div>
+      {/* Main Content */}
+      <motion.main
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="flex-1 flex flex-col px-6 pt-6 pb-8 max-w-md mx-auto w-full"
+      >
+        {/* Title Section */}
+        <motion.div variants={itemVariants} className="mb-6 text-center">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-black to-slate-800 shadow-lg mb-4">
+            <Car className="w-8 h-8 text-white" />
+          </div>
+          <h1 className="text-3xl font-bold tracking-tight text-slate-900 mb-1">
+            Vehicle Details
+          </h1>
+          <p className="text-slate-600 text-sm">
+            Add your vehicle information to complete signup
+          </p>
+        </motion.div>
 
-        <div className="w-full flex flex-col-2 gap-2 mb-3">
-          <div className=" w-full flex-col-2 gap-2 mb-3">
-            <h1 className="text-base  font-sans">Vehicle no. Plate </h1>
-            <input
-              value={Numberplate}
-              onChange={(e) => {
-                setNumberplate(e.target.value.toUpperCase());
-              }}
-              className="outline-none mb-4 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-              type="text"
-              required
-              placeholder="ex(GJ01AB1234)"
-            />
-          </div>
-          <div className=" w-full flex-col-2 gap-2 mb-3">
-            <h1 className="font-sans text-base ">Vehicle Colour</h1>
-            <input
-              value={Vehiclecolor}
-              onChange={(e) => {
-                setvehiclecolor(e.target.value);
-              }}
-              className="outline-none mb-4 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-              type="text"
-              placeholder="ex(White,Blue etc) "
-              required
-            />
-          </div>
-        </div>
-        <div className="flex  gap-4 mb-3">
-          <div className=" w-full  flex-col-2  gap-2 mb-3">
-            <h1 className="text-base ">Vehicle Type</h1>
-            <select
-              value={Vehicletype}
-              onChange={handleChange}
-              name="vehicle"
-              id="vehicle"
-              className="outline-none mb-4 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-            >
-              <option value="car">Car</option>
-              <option value="bike">Bike</option>
-              <option value="auto">Auto</option>
-            </select>
+        {/* Vehicle Form */}
+        <motion.form
+          variants={itemVariants}
+          onSubmit={(e) => {
+            submitHandler(e);
+          }}
+          className="space-y-4"
+        >
+          {/* Vehicle Model */}
+          <div className="space-y-2">
+            <label className="block text-sm font-semibold text-slate-700">
+              Vehicle Model
+            </label>
+            <div className="relative">
+              <Truck className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <input
+                value={Vehiclemodel}
+                onChange={(e) => {
+                  setvehiclemodel(e.target.value);
+                }}
+                className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                type="text"
+                required
+                placeholder="e.g., Maruti Suzuki Swift"
+              />
+            </div>
           </div>
 
-          <div className=" w-full  flex-col-2 gap-2 mb-3">
-            <h1 className="font-sans text-base ">Vehicle Capacity</h1>
-            <input
-              value={Vehiclecapacity}
-              onChange={(e) => {
-                setvehiclecapacity(e.target.value);
-              }}
-              className="outline-none mb-4 bg-[#eeeeee] rounded-lg px-2 py-2  w-full text-lg placeholder:text-base"
-              type="Number"
-              placeholder="ex(1,2,5) "
-              required
-            />
-          </div>
-        </div>
+          {/* Number Plate & Color */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">
+                Number Plate
+              </label>
+              <div className="relative">
+                <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={Numberplate}
+                  onChange={(e) => {
+                    setNumberplate(e.target.value.toUpperCase());
+                  }}
+                  className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm uppercase"
+                  type="text"
+                  required
+                  placeholder="GJ01AB1234"
+                />
+              </div>
+            </div>
 
-        <div className="w-full flex justify-center items-center">
-          <button className="font-sans bg-[#111] text-white  rounded-lg text-xl w-[15rem] font-semibold mb-2 rounded py-2 px-1">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">
+                Color
+              </label>
+              <div className="relative">
+                <Palette className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={Vehiclecolor}
+                  onChange={(e) => {
+                    setvehiclecolor(e.target.value);
+                  }}
+                  className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                  type="text"
+                  placeholder="White"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Vehicle Type & Capacity */}
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">
+                Vehicle Type
+              </label>
+              <div className="relative">
+                <Car className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none z-10" />
+                <select
+                  value={Vehicletype}
+                  onChange={handleChange}
+                  name="vehicle"
+                  id="vehicle"
+                  className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm appearance-none cursor-pointer"
+                >
+                  <option value="car">Car</option>
+                  <option value="bike">Bike</option>
+                  <option value="auto">Auto</option>
+                </select>
+                <svg
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-semibold text-slate-700">
+                Capacity
+              </label>
+              <div className="relative">
+                <Users className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                <input
+                  value={Vehiclecapacity}
+                  onChange={(e) => {
+                    setvehiclecapacity(e.target.value);
+                  }}
+                  className="w-full pl-10 pr-3 py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-black focus:ring-4 focus:ring-black/5 transition-all outline-none text-sm"
+                  type="number"
+                  placeholder="4"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Submit Button */}
+          <motion.button
+            type="submit"
+            className="w-full py-3.5 bg-black text-white font-semibold rounded-xl shadow-lg shadow-black/20 hover:bg-slate-900 hover:shadow-xl hover:shadow-black/30 transition-all mt-6"
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+          >
             Complete SignUp
-          </button>
-        </div>
-      </form>
-      <div className="w-full flex justify-center absolute bottom-3">
-        <h1 className="text-xs">
-          <strong className="underline">Privacy & Policy</strong> and{" "}
-          <strong className="underline">Term of service</strong> apply
-        </h1>
-      </div>
+          </motion.button>
+        </motion.form>
+
+        {/* Footer */}
+        <motion.div variants={itemVariants} className="mt-auto pt-8">
+          <p className="text-center text-xs text-slate-500">
+            <Link to="/privacy" className="font-semibold text-slate-700 hover:underline underline-offset-2">
+              Privacy Policy
+            </Link>
+            {" "}and{" "}
+            <Link to="/terms" className="font-semibold text-slate-700 hover:underline underline-offset-2">
+              Terms of Service
+            </Link>
+            {" "}apply
+          </p>
+        </motion.div>
+      </motion.main>
     </div>
   );
 };
 
-export default Userlogin;
+export default VehicleInfo;
