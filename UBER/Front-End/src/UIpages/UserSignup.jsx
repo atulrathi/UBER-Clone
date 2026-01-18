@@ -25,7 +25,7 @@ const Userlogin = () => {
       email: email,
       password: password,
     };
-   const newuser =await axios.post("http://localhost:4000/createuser/register",userdata);
+   const newuser =await axios.post("https://uber-clone-t911.onrender.com/createuser/register",userdata);
    if(newuser.status===201){
     const data=newuser.data;
     setuser(data.user);

@@ -54,7 +54,7 @@ const Home = () => {
     const token = localStorage.getItem("token");
     async function fetchUser() {
       try {
-        const res = await axios.get("http://localhost:4000/setuser/userdata", {
+        const res = await axios.get("https://uber-clone-t911.onrender.com/setuser/userdata", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200) {
@@ -117,7 +117,7 @@ const Home = () => {
     setLoading(true);
     try {
       const totaldis = await axios.post(
-        "http://localhost:4000/distance/time-distance",
+        "https://uber-clone-t911.onrender.com/distance/time-distance",
         { pickup, destination }
       );
       setuser({

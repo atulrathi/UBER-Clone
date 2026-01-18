@@ -23,7 +23,7 @@ const [email, setEmail] = useState('');
       password:password
     }
 
-    const newuser = await axios.post("http://localhost:4000/caption/register",userdata)
+    const newuser = await axios.post("https://uber-clone-t911.onrender.com/caption/register",userdata)
     .catch((err)=>{
       console.log(err);
       Nevigate('/caption-Login');

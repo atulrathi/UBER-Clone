@@ -42,7 +42,7 @@ const CaptainHome = () => {
     const token = localStorage.getItem("caption");
     async function fetchUser() {
       try {
-        const res = await axios.get("http://localhost:4000/setcaption/captiondata", {
+        const res = await axios.get("https://uber-clone-t911.onrender.com/setcaption/captiondata", {
           headers: { Authorization: `Bearer ${token}` },
         });
 

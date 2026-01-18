@@ -29,7 +29,7 @@ const Userlogin = () => {
     };
 
     const newuser = await axios.post(
-      "http://localhost:4000/caption/Vehicle-info",
+      "https://uber-clone-t911.onrender.com/caption/Vehicle-info",
       captindata
     );
 

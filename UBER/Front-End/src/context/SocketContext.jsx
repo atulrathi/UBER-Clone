@@ -3,7 +3,7 @@ import { io } from "socket.io-client";
 
 export const SocketContext = createContext();
 
-    const socket = io("http://localhost:4000", {
+    const socket = io("https://uber-clone-t911.onrender.com", {
       transports: ["websocket"],
       reconnection: true,
     });
@@ -14,10 +14,8 @@ const SocketProvider = ({ children }) => {
   useEffect(() => {
 
     socket.on("connect", () => {
-      console.log("Socket connected:", socket.id);
     });
     socket.on("disconnect", () => {
-      console.log("Socket disconnected");
     });
 
     return () => {

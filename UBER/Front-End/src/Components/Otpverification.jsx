@@ -120,7 +120,7 @@ const OTPVerification = ({
         setnewride(false);
         setbasic(false);
         setRideup(true);
-        const response = await axios.post("http://localhost:4000/start/ride",{ridedata});
+        const response = await axios.post("https://uber-clone-t911.onrender.com/start/ride",{ridedata});
       } else {
         setError("❌ Invalid OTP. Please try again.");
       }

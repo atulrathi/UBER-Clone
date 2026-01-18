@@ -11,7 +11,7 @@ const Logout = () => {
     const logoutUser = async () => {
       try {
         const res = await axios.post(
-          "http://localhost:4000/caption/logout",
+          "https://uber-clone-t911.onrender.com/caption/logout",
           {}, // no body needed
           {
             headers: { Authorization: `Bearer ${token}` },

@@ -16,7 +16,7 @@ const Sharetrip = ({
   const { user,setuser} = useContext(UserDataContext);
 
   function rideshare() {
-    const rideDetails = axios.post("http://localhost:4000/otp/getotp", {
+    const rideDetails = axios.post("https://uber-clone-t911.onrender.com/otp/getotp", {
       captionSocketID: captiondata?.captionSocketID
     })
     .then((response) => {

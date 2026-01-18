@@ -3,7 +3,7 @@ import { UserDataContext } from "../context/userContext";
 import { CaptainDatacontext } from "../context/CaptainContext";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:4000");
+const socket = io("https://uber-clone-t911.onrender.com");
 
 const Riderequest = (props) => {
   const { user } = useContext(UserDataContext);

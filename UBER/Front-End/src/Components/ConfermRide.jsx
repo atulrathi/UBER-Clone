@@ -10,7 +10,7 @@ const Vehicledetail = (props) => {
     props.setWating(true);
     props.setconfermride(false);
 
-    const rideDetails = axios.post("http://localhost:4000/ride/conferm", {
+    const rideDetails = axios.post("https://uber-clone-t911.onrender.com/ride/conferm", {
       userID: user.id,
       fullname: user.fullname.Firstname + " " + user.fullname.Lastname,
       pickup: props.pickup,
