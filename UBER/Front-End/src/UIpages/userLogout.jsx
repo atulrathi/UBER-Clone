@@ -9,7 +9,7 @@ const Logout = () => {
  let {user,setuser}= useContext(UserDataContext)
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("ridertoken");
     user.active=false
     const logoutUser = async () => {
       try {

@@ -18,7 +18,6 @@ const CaptainLogin = () => {
       email: email,
       password: password,
     };
-    console.log(CaptionData);
     const newuser = await axios
       .post("https://uber-clone-t911.onrender.com/caption/login", CaptionData)
       .catch((error) => {

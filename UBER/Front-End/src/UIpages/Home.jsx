@@ -51,7 +51,7 @@ const Home = () => {
   const { socket } = useContext(SocketContext);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("ridertoken");
     async function fetchUser() {
       try {
         const res = await axios.get("https://uber-clone-t911.onrender.com/setuser/userdata", {

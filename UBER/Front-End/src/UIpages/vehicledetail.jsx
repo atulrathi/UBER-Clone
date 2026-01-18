@@ -40,7 +40,7 @@ const VehicleInfo = () => {
       const data = newuser.data;
       console.log(data);
       alert("Vehicle Details Added Successfully");
-      localStorage.removeItem("token");
+      localStorage.removeItem("caption");
       Nevigate("/caption-login");
     }
 

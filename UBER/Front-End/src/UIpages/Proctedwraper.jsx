@@ -4,7 +4,7 @@ import { useEffect } from "react";
 
 const Proctedwraper = ({ children }) => {
   const navigate = useNavigate();
-    const tokne = localStorage.getItem("token");
+    const tokne = localStorage.getItem("ridertoken");
   useEffect(() => {
     if (!tokne) {
       navigate("/caption-Login");

@@ -24,7 +24,7 @@ const Userlogin = () => {
     if (response.status === 200) {
       const data = response.data;
       setuser(data.user._id);
-      localStorage.setItem("token", data.token);
+      localStorage.setItem("ridertoken", data.token);
       navigate("/home");
     }
     setEmail('');
