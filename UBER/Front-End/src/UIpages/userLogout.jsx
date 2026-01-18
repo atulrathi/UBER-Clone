@@ -23,7 +23,7 @@ const Logout = () => {
         );
 
         if (res.status === 200) {
-          localStorage.removeItem("token");
+          localStorage.removeItem("ridertoken");
           navigate("/user-Login");
         }
       } catch (err) {
