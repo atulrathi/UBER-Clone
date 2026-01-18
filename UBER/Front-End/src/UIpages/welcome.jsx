@@ -7,12 +7,22 @@ const Home = () => {
     <div className='h-screen  w-screen overflow-hidden '>
       <div className=' mt-0  flex flex-col w-full pt-8 flex justify-between flex-col '>
         <img className='z-9 w-[9rem] ml-[3rem] mt-[2rem]' src="/uber-logo.png" alt="" />
-        <div  className="h-full flex items-center justify-center w-full overflow-hidden mt-[5rem]">
- <video  className=' rounded-lg ' loop autoPlay muted controlsList='nodownload noremoteplayback noplaybackrate' disablePictureInPicture>
-      <source src='/car.mp4' className='' type='video/mp4' />
-      you browser not support video
-      </video>
-        </div>
+<div className="h-full flex items-center justify-center w-full overflow-hidden mt-[5rem]">
+  <video
+    className="rounded-lg pointer-events-none"
+    src="/car.mp4"
+    autoPlay
+    muted
+    loop
+    playsInline
+    disablePictureInPicture
+    controls={false}
+    controlsList="nodownload nofullscreen noremoteplayback noplaybackrate"
+  >
+    Your browser does not support the video tag
+  </video>
+</div>
+
          
       <div className= 'py-5 px-10 bg-black h-[15rem]  absolute bottom-[-2rem] rounded-tl-4xl rounded-tr-4xl mb-[2rem] gap-4 flex  w-screen justify-center flex-col '>
         <div className='w-full flex justify-center'>
