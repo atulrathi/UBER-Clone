@@ -26,10 +26,10 @@ const App = () => {
         <Route path='/caption-Login' element={<Proctedlogin><CaptionLogin /></Proctedlogin>} />
         <Route path='/user-Login' element={<Proctedlogin><Userlogin /></Proctedlogin>} />
         <Route path='/user-Signup' element={<Usersignup />} />
-        <Route path='/Home' element={<Proctedwraper>
+        <Route path='/home' element={<Proctedwraper>
           <Home />
         </Proctedwraper>} />
-        <Route path='/Home/logout' element={
+        <Route path='/home/logout' element={
          <Logout />
         }/>
         <Route path='/caption-home' element={

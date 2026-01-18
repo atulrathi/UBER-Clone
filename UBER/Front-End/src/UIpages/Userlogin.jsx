@@ -23,7 +23,7 @@ const Userlogin = () => {
       const data=response.data;
       setuser(data.user._id);
       localStorage.setItem("token",data.token);
-      navigate("/Home");
+      navigate("/home");
     }
     setEmail('');
     setPassword('');
