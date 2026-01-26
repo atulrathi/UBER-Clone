@@ -55,7 +55,6 @@ module.exports.logoutuser = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Clear cookie if using cookies
     res.clearCookie("token");
 
     res.status(200).json({ message: "Logout successful" });

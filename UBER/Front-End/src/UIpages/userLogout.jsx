@@ -10,6 +10,10 @@ const Logout = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("ridertoken");
+    if(!token){
+      navigate("/user-login");
+      return;
+    }
     user.active=false
     const logoutUser = async () => {
       try {
