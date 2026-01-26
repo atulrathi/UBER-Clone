@@ -24,7 +24,7 @@ const Logout = () => {
 
         if (res.status === 200) {
           localStorage.removeItem("ridertoken");
-          navigate("/user-Login");
+          navigate("/user-login");
         }
       } catch (err) {
         console.error("Logout failed:", err.response?.data || err.message);

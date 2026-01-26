@@ -15,11 +15,11 @@ const UserProfile = () => {
 
   const handleLogout = () => {
     if(value.who==='caption'){
-          alert("You have been logged out successfully!");
     navigate("/caption-home/logout");
+          alert("You have been logged out successfully!");
     }else{
-      alert("You have been logged out successfully!");
       navigate("/Home/logout");
+      alert("You have been logged out successfully!");
     }
 
   };
