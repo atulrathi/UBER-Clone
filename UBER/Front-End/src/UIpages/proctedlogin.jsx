@@ -8,6 +8,8 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/home" replace />;
   }else if (caption) {
     return <Navigate to="/caption-home" replace />;
+  }else{
+    return <Navigate to="/" replace />
   }
 
   return children;
